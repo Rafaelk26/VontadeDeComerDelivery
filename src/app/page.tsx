@@ -1,69 +1,114 @@
+"use client"
 import Image from "next/image";
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+// Components
+import { Header } from "@/components/Header";
+import { Wrapper } from "@/components/Wrapper";
+import { Button } from "@/components/Button";
+import { TrackItems } from "@/components/TrackItems";
+import { Card } from "@/components/Card";
+
+// Assets
+import Fundo from "../../public/Background Home.png";
+import Flyer from "../../public/Flyer.png";
+
+export default function Home(){
+  return(
+    <>
+      <main className="relative min-h-screen overflow-hidden">
+        {/* BACKGROUND */}
         <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
+          src={Fundo}
+          alt="Fundo Home"
+          fill
           priority
+          quality={100}
+          className="absolute inset-0 -z-20 object-fill"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <Header />
+
+        <Wrapper>
+          <section className="relative flex min-h-[calc(100vh-80px)] items-center">
+            
+            {/* CONTEÚDO */}
+            <div className="relative z-10 w-full max-w-[650px] pb-10">
+              <h4 className="font-google text-md italic text-white">
+                Sabor & Qualidade
+              </h4>
+
+              <div className="mt-3 flex flex-col">
+                <h1 className="font-google text-5xl font-regular leading-[0.95] text-white md:text-7xl">
+                  No conforto
+                </h1>
+
+                <h1 className="font-google text-5xl font-medium leading-[0.95] text-[#F97318] md:text-7xl">
+                  De sua casa
+                </h1>
+              </div>
+
+              <span className="mt-5 block font-google text-base font-light leading-tight text-white md:text-xl">
+                Caldos, bebidas, marmitas, e muito mais.
+                <br />
+                Tudo feito com carinho especial para você!
+              </span>
+
+              {/* BOTÃO */}
+              <Button text="Ver cardápio" key={1} />
+            </div>
+
+            {/* FLYER */}
+            <div className="absolute bottom-[5%] right-[5%] z-20 md:right-[8%] lg:right-[4%]">
+              <Image
+                src={Flyer}
+                alt="Flyer Vontade de Comer"
+                priority
+                quality={100}
+                className="w-64 object-contain rotate-[-14deg] transition-transform duration-300
+                hover:cursor-pointer hover:scale-105 hover:drop-shadow-[0_10px_25px_rgba(253, 252, 252, 0.6)]"
+              />
+            </div>
+          </section>
+        </Wrapper>
+      </main>
+
+      {/* TRACK */}
+      <main className="w-full overflow-hidden border-t border-b border-[#505050] py-6">
+        <div className="flex w-max">
+          <div className="flex shrink-0 gap-12 animation-personalized">
+            <TrackItems quantity={20} />
+          </div>
+
+          <div className="flex shrink-0 gap-12 animation-personalized">
+            <TrackItems quantity={20} />
+          </div>
         </div>
       </main>
-    </div>
+
+      {/* CARDAPIO */}
+      <main className="mt-16">
+        <Wrapper>
+          <h4 className="font-google text-md italic text-[#F97318]">
+            Nossos produtos
+          </h4>
+          <h1 className="font-google text-3xl font-regular leading-[0.95] text-white md:text-3xl">
+            O melhor do nosso cardápio
+          </h1>
+          <div className="w-48 border border-[#F97318] mt-3" />
+
+
+          <div className="grid grid-cols-4 gap-6 mt-16">
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+            <Card />
+          </div>
+        </Wrapper>
+      </main>
+    </>
   );
 }
