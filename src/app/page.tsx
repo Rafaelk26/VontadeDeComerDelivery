@@ -1,4 +1,5 @@
 "use client"
+import Link from "next/link";
 import Image from "next/image";
 
 // Components
@@ -7,6 +8,10 @@ import { Wrapper } from "@/components/Wrapper";
 import { Button } from "@/components/Button";
 import { TrackItems } from "@/components/TrackItems";
 import { Card } from "@/components/Card";
+import { Footer } from "@/components/Footer";
+
+// Data
+import { products } from '@/data/Products'
 
 // Assets
 import Fundo from "../../public/Background Home.png";
@@ -18,21 +23,20 @@ export default function Home(){
       <main className="relative min-h-screen overflow-hidden">
         {/* BACKGROUND */}
         <Image
-          src={Fundo}
-          alt="Fundo Home"
-          fill
-          priority
-          quality={100}
-          className="absolute inset-0 -z-20 object-fill"
+         src={Fundo}
+         alt="Fundo Home"
+         fill
+         priority
+         quality={100}
+         className="absolute -z-20 object-fill"
         />
 
         <Header />
-
         <Wrapper>
-          <section className="relative flex min-h-[calc(100vh-80px)] items-center">
+          <section className="relative flex min-h-[calc(120vh)] items-center">
             
             {/* CONTEÚDO */}
-            <div className="relative z-10 w-full max-w-[650px] pb-10">
+            <div className="relative z-10 w-full max-w-[650px] pb-10 ps-10">
               <h4 className="font-google text-md italic text-white">
                 Sabor & Qualidade
               </h4>
@@ -54,19 +58,23 @@ export default function Home(){
               </span>
 
               {/* BOTÃO */}
-              <Button text="Ver cardápio" key={1} />
+              <div className="mt-8">
+                <Button text="Ver cardápio" linkPath="/cardapio" />
+              </div>
             </div>
 
             {/* FLYER */}
-            <div className="absolute bottom-[5%] right-[5%] z-20 md:right-[8%] lg:right-[4%]">
-              <Image
-                src={Flyer}
-                alt="Flyer Vontade de Comer"
-                priority
-                quality={100}
-                className="w-64 object-contain rotate-[-14deg] transition-transform duration-300
-                hover:cursor-pointer hover:scale-105 hover:drop-shadow-[0_10px_25px_rgba(253, 252, 252, 0.6)]"
-              />
+            <div className="absolute bottom-[15%] right-[5%] z-20 md:right-[8%] lg:right-[4%]">
+              <Link href={"/cardapio"}>
+                <Image
+                 src={Flyer}
+                 alt="Flyer Vontade de Comer"
+                 priority
+                 quality={100}
+                 className="w-64 object-contain rotate-[-14deg] transition-transform duration-300
+                 hover:cursor-pointer hover:scale-105 hover:drop-shadow-[0_10px_25px_rgba(253, 252, 252, 0.6)]"
+                />
+              </Link>
             </div>
           </section>
         </Wrapper>
@@ -88,26 +96,29 @@ export default function Home(){
       {/* CARDAPIO */}
       <main className="mt-16">
         <Wrapper>
-          <h4 className="font-google text-md italic text-[#F97318]">
+          <h4 className="font-google text-md italic text-[#F97318] ps-10">
             Nossos produtos
           </h4>
-          <h1 className="font-google text-3xl font-regular leading-[0.95] text-white md:text-3xl">
+          <h1 className="font-google text-3xl font-regular leading-[0.95] text-white ps-10 md:text-3xl">
             O melhor do nosso cardápio
           </h1>
-          <div className="w-48 border border-[#F97318] mt-3" />
+          <div className="w-48 border border-[#F97318] mt-3 ms-10" />
 
 
-          <div className="grid grid-cols-4 gap-6 mt-16">
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
+          <section className="px-10 grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
+            {products.map((i)=> (
+              <Card key={i.id} product={i} />
+            ))}
+          </section>
+
+          <div className="mt-10 flex justify-center">
+            <Button text="Ver mais opções"/>
           </div>
         </Wrapper>
+      </main>
+
+      <main className="w-full mt-14">
+        <Footer />
       </main>
     </>
   );
