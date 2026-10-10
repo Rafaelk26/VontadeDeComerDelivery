@@ -49,7 +49,10 @@ export function Card({ product }: CardProps){
     addItemCart({
       id: product.id,
       name: product.name,
+      description: product.description,
+      category: product.category,
       price: product.price,
+      photo: product.image,
       quantity,
     });
   }

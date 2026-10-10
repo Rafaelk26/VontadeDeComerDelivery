@@ -9,8 +9,11 @@ type CartProps = {
 type itemCartProps = {
   id: string;
   name: string;
+  description: string;
+  category: string;
   price: string;
   quantity: number;
+  photo: string;
 };
 
 type CartContextProps = {
@@ -36,9 +39,6 @@ export function CartProvider({ children }: CartProps){
         if(cartIdIndex === -1){
             setCart([ ...cart, item ]);
         }
-
-        console.log("CARRINHO ATUALMENTE:", cart);
-
     }
 
     return (

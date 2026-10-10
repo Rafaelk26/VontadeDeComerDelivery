@@ -9,7 +9,7 @@ export function Footer(){
     const date = new Date();
 
     return(
-        <Wrapper>
+        <>
             <footer className="w-full relative">
                 <div className="w-full absolute top-14 z-10 ps-10">
                     <span className="text-white font-google font-light">
@@ -21,10 +21,10 @@ export function Footer(){
                 <Image
                 src={Fundo}
                 alt="Fundo Footer"
-                className="w-full object-contain"
+                className="w-full object-fill h-40"
                 />
             </footer>
-        </Wrapper>
+        </>
         
     )
 }
