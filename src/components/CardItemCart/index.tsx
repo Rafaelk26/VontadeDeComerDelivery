@@ -1,14 +1,17 @@
-import Image from "next/image";
+"use client";
 import React from "react";
+import Image from "next/image";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 // Types
 import { itemCartProps } from "@/context/Cart/useCart";
 interface removeItemCartProps extends itemCartProps{
     item: itemCartProps;
     removeItemCart: (id: string)=> void;
+    valueFinal?: string;
 }
 
-export function CardItemCart({removeItemCart, item, name, description, price, category, quantity, photo}: removeItemCartProps){
+export function CardItemCart({removeItemCart, id, item, name, description, price, category, quantity, photo, valueFinal}: removeItemCartProps){
         const [qtd, setQtd] = React.useState(quantity);
 
         function addList(value: number){
@@ -27,27 +30,35 @@ export function CardItemCart({removeItemCart, item, name, description, price, ca
             }
         }
 
+        function recalculatePrice(){
+            const calculateNewValue = Number(price) * qtd;
+            return calculateNewValue.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
+        }
+
     return(
         <>
             <div
-             className="w-full first:pb-8 py-8 last:pt-8">
-                <div className="flex">
-                    <div>
+             className="w-full flex justify-between first:pb-4 pb-4 last:pb-0">
+                <div className="w-full max-w-10/12 flex gap-2 items-center">
+                    <div className="h-44 w-44 shrink-0">
                         <Image 
                          alt={name}
                          src={photo}
-                         className="w-52 h-40 rounded-lg object-cover border border-[#5D5D5D]"
-                         width={1400}
+                         className="w-full h-full rounded-lg object-cover border border-[#5D5D5D]"
+                         width={1000}
                          height={1000}
                         />
                     </div>
-                    <div>
-                        <span className="font-google">{`NOME: ${name}`}</span><br />
-                        <span>{`DESCRIÇÃO: ${description}`}</span><br />
-                        <span>{`PREÇO: ${price}`}</span><br />
+                    <div className="flex flex-col justify-between">
+                        
+                        <h1 className="font-google font-bold text-3xl leading-7">{name}</h1>
+                    
+                        <h6 className="font-google font-light text-sm text-[#C2C2C2] mt-2">{`${description}`}</h6>
+                        
+                        <h2 className="font-google font-medium text-3xl mt-2 text-[#F97318]">{`${Number(price).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'})}`}</h2>
 
                         {/* Quantity and Button Remove */}
-                        <div className="w-full border-2 border-red-400">
+                        <div className="w-full flex justify-between mt-2">
                             <div className="flex gap-6 border border-[#505050] items-center py-1 px-2 rounded-md">
                                 <button
                                 onClick={()=> delList(qtd)}
@@ -59,11 +70,24 @@ export function CardItemCart({removeItemCart, item, name, description, price, ca
                                 onClick={()=> addList(qtd)}
                                 className="font-google font-semibold text-2xl hover:cursor-pointer">+</button>
                             </div>
+
+                            <button 
+                            onClick={()=> removeItemCart(id)}
+                            className="flex shrink-0 gap-1.5 items-center cursor-pointer me-16">
+                                <FaRegTrashAlt color="#fff" size={20} />
+                                <span className="font-google whitespace-nowrap">Remover</span>
+                            </button>
                         </div>
                         
                     </div>
                 </div>
-                <span>{`CATEGORIA: ${category}`}</span>
+                <div className="w-full max-w-2/12 flex flex-col justify-between items-end">
+                    <span className="font-google font-light bg-[#1D1D1D] border border-[#666666] py-1 px-2 rounded-lg">{category}</span>
+                    <div>
+                        <h1 className="text-end font-google text-md">Subtotal</h1>
+                        <span className="font-google font-medium text-xl">{recalculatePrice()}</span>
+                    </div>
+                </div>
             </div>
         </>
     )

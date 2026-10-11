@@ -2,18 +2,19 @@
 import React from "react";
 import Image from "next/image";
 import { IoMdCart } from "react-icons/io";
+import { FaPenNib } from "react-icons/fa";
 
 // Components
 import { Header } from "@/components/Header";
 import { Wrapper } from "@/components/Wrapper";
 import { Footer } from "@/components/Footer";
+import { CardItemCart } from "@/components/CardItemCart";
 
 // Context
 import { cartContext } from "@/context/Cart/useCart";
 
 // Assets
 import Fundo from "../../../public/Background Carrinho.png";
-import { CardItemCart } from "@/components/CardItemCart";
 
 export default function Carrinho(){
 
@@ -50,23 +51,39 @@ export default function Carrinho(){
             <Wrapper>
                 <section className="w-full flex gap-6 px-10 mt-10 h-screen">
                     {/* ITEMS CART */}
-                    <section className="w-full max-w-7/12 border border-[#282828] rounded-xl">
+                    <section className="w-full max-w-7/12 flex flex-col border border-[#282828] rounded-xl">
                         {/* ITEMS */}
-                        <div className="w-full px-6 py-8 flex flex-col divide-y divide-[#505050]">
-                            {cart.map((i, index)=> (
-                                <CardItemCart
-                                 key={index}
-                                 id={i.id}
-                                 name={i.name}
-                                 category={i.category}
-                                 description={i.description}
-                                 price={i.price}
-                                 quantity={i.quantity}
-                                 photo={i.photo}
-                                 item={i}
-                                 removeItemCart={removeItemCart}
-                                />
-                            ))}
+                        <div className="w-full px-6 py-8 flex flex-col gap-8 divide-y divide-[#505050] h-full overflow-y-auto">
+                            {cart.length > 0 ? (
+                                cart.map((i, index)=> (
+                                    <CardItemCart
+                                     key={index}
+                                     id={i.id}
+                                     name={i.name}
+                                     category={i.category}
+                                     description={i.description}
+                                     price={i.price}
+                                     quantity={i.quantity}
+                                     photo={i.photo}
+                                     item={i}
+                                     removeItemCart={removeItemCart}
+                                    />
+                            )   )
+                            ):(
+                                <span className="text-center font-google">Nenhum produto adicionado.</span>
+                            )}
+                        </div>
+                        <div className="p-6 h-96 flex flex-col gap-4">
+                            <div className="flex gap-2 items-center">
+                                <FaPenNib size={20} color="#fff" />
+                                <span className="font-google font-light text-lg">Observações (opcional)</span>
+                            </div>
+
+                            <textarea 
+                            placeholder="Ex: Sem carne seca, bem separado, etc..."
+                            className="w-full h-full border border-[#242424] rounded-xl p-2 font-google 
+                            hover:border-[#515151] focus:border-[#515151]"
+                            name="observacao"></textarea>
                         </div>
                     </section>
                     

@@ -26,6 +26,19 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+
+/* Oculta a barra de rolagem globalmente */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer e Edge antigo */
+}
+
+/* Chrome, Safari e Edge */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+
 .animation-personalized {
   animation: animate-person 30s linear infinite;
 }
