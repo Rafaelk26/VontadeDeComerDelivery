@@ -36,7 +36,7 @@ export default function Home(){
           <section className="relative flex min-h-[calc(120vh)] items-center">
             
             {/* CONTEÚDO */}
-            <div className="relative z-10 w-full max-w-[650px] pb-10 ps-10">
+            <div className="relative z-10 w-full max-w-162.5 pb-10 ps-10">
               <h4 className="font-google text-md italic text-white">
                 Sabor & Qualidade
               </h4>
