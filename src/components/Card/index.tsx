@@ -24,7 +24,7 @@ export function Card({ product }: CardProps){
         throw new Error ("Item precisa estar no context");
     }
 
-    const { cart, addItemCart } = context;
+    const { addItemCart } = context;
     const [quantity, setQuantity] = React.useState(0);
 
     function addList() {

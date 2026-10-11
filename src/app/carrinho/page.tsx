@@ -1,15 +1,28 @@
+"use client";
+import React from "react";
 import Image from "next/image";
+import { IoMdCart } from "react-icons/io";
 
 // Components
 import { Header } from "@/components/Header";
 import { Wrapper } from "@/components/Wrapper";
+import { Footer } from "@/components/Footer";
+
+// Context
+import { cartContext } from "@/context/Cart/useCart";
 
 // Assets
 import Fundo from "../../../public/Background Carrinho.png";
-import { IoMdCart } from "react-icons/io";
-import { Footer } from "@/components/Footer";
+import { CardItemCart } from "@/components/CardItemCart";
 
 export default function Carrinho(){
+
+    const context = React.useContext(cartContext);
+    if (!context){
+        throw new Error("Item precisa estar no CartProvider.");
+    }
+    const { cart, removeItemCart } = context;
+
     return(
         <main className="w-full">
             {/* BACKGROUND AND TITLE */}
@@ -37,10 +50,23 @@ export default function Carrinho(){
             <Wrapper>
                 <section className="w-full flex gap-6 px-10 mt-10 h-screen">
                     {/* ITEMS CART */}
-                    <section className="w-full max-w-7/12 border border-[#282828]">
+                    <section className="w-full max-w-7/12 border border-[#282828] rounded-xl">
                         {/* ITEMS */}
-                        <div className="w-full">
-                            <span>div 1</span>
+                        <div className="w-full px-6 py-8 flex flex-col divide-y divide-[#505050]">
+                            {cart.map((i, index)=> (
+                                <CardItemCart
+                                 key={index}
+                                 id={i.id}
+                                 name={i.name}
+                                 category={i.category}
+                                 description={i.description}
+                                 price={i.price}
+                                 quantity={i.quantity}
+                                 photo={i.photo}
+                                 item={i}
+                                 removeItemCart={removeItemCart}
+                                />
+                            ))}
                         </div>
                     </section>
                     

@@ -6,7 +6,7 @@ type CartProps = {
     children: ReactNode;
 }
 
-type itemCartProps = {
+export type itemCartProps = {
   id: string;
   name: string;
   description: string;
@@ -20,6 +20,7 @@ type CartContextProps = {
   cart: itemCartProps[];
   setCart: React.Dispatch<React.SetStateAction<itemCartProps[]>>;
   addItemCart: (item: itemCartProps)=> void;
+  removeItemCart: (id: string)=> void;
 };
 
 // Create context
@@ -41,8 +42,13 @@ export function CartProvider({ children }: CartProps){
         }
     }
 
+    function removeItemCart(id: string){
+        // ENCONTRA O ID, REMOVE E CRIA UM NOVO ARRAY SEM AQUELE ITEM.
+        setCart((currentCart) => currentCart.filter((item) => item.id !== id));
+    }
+
     return (
-        <cartContext.Provider value={{ cart, setCart, addItemCart }}>
+        <cartContext.Provider value={{ cart, setCart, addItemCart, removeItemCart }}>
             { children }
         </cartContext.Provider>
     )

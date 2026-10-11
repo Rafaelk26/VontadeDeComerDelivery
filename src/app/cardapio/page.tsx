@@ -21,7 +21,7 @@ import Banner from "../../../public/Banner Cardapio.png";
 
 export default function Cardapio(){
 
-    const [activeCategory, setActiveCategory] = React.useState("1");
+    const [activeCategory, setActiveCategory] = React.useState<string>("1");
     const [search, setSearch] = React.useState<string>("");
     
     const selectedCategory = categories.find(
