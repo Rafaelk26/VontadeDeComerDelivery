@@ -1,14 +1,19 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { IoMdCart } from "react-icons/io";
+import { IoMdCart, IoIosLock } from "react-icons/io";
 import { FaPenNib } from "react-icons/fa";
+import { FiShoppingBag } from "react-icons/fi";
+import { CiCreditCard1 } from "react-icons/ci";
+import { FaPix } from "react-icons/fa6";
+import { FaMoneyBills } from "react-icons/fa6";
 
 // Components
 import { Header } from "@/components/Header";
 import { Wrapper } from "@/components/Wrapper";
 import { Footer } from "@/components/Footer";
 import { CardItemCart } from "@/components/CardItemCart";
+import { Button } from "@/components/Button";
 
 // Context
 import { cartContext } from "@/context/Cart/useCart";
@@ -22,7 +27,38 @@ export default function Carrinho(){
     if (!context){
         throw new Error("Item precisa estar no CartProvider.");
     }
-    const { cart, removeItemCart } = context;
+    const { cart, removeItemCart, isLoaded } = context;
+    const [ description, setDescription ] = React.useState("Nenhuma observação.");
+    const [ methodPay, setMethodPay ] = React.useState("");
+    
+    // FRETE
+    const totalItems = React.useMemo(()=> {
+        return cart.reduce((acc, item) => acc + Number(item.quantity || 0), 0);
+    }, [cart]);
+
+    const freteGratis = totalItems >= 5;
+    const freteCalc = totalItems === 0 || freteGratis ? 0 : 5;
+    
+    // SUBTOTAL
+    const subtotal = React.useMemo(()=> {
+        return cart.reduce((acc, item) => acc + item.subtotal, 0);
+    }, [cart]);
+
+    // TOTAL
+    const total = subtotal + freteCalc;
+
+
+    function sendOrderToWhatsApp(){
+        console.log("ENVIANDO ITEMS NO CARRINHO", cart);
+        console.log("Descrição:", description);
+        console.log("Items no carrinho:", cart.length);
+        console.log("Total do pedido:", total);
+        console.log("Método de pagamento:", methodPay);
+    }
+
+    if(!isLoaded){
+        return <div>Carregando carrinho...</div>;
+    }   
 
     return(
         <main className="w-full">
@@ -32,11 +68,11 @@ export default function Carrinho(){
                  src={Fundo}
                  alt="Fundo Home"
                  quality={100}
-                 className="w-full object-cover h-36"
+                 className="w-full object-cover h-44"
                 />
 
                 <Wrapper>
-                    <div className="absolute z-50 top-8 flex gap-2 items-center ps-10">
+                    <div className="absolute z-50 top-12 flex gap-2 items-center ps-10">
                         <IoMdCart size={48} color="#F97318" />
                         <div className="">
                             <h1 className="font-google font-bold text-5xl text-white">Meu carrinho</h1>
@@ -65,38 +101,151 @@ export default function Carrinho(){
                                      price={i.price}
                                      quantity={i.quantity}
                                      photo={i.photo}
-                                     item={i}
                                      removeItemCart={removeItemCart}
+                                     subtotal={i.subtotal}
                                     />
                             )   )
                             ):(
-                                <span className="text-center font-google">Nenhum produto adicionado.</span>
+                                <div className="w-full h-full flex flex-col justify-center">
+                                    <span className="text-center font-google">Nenhum produto adicionado.</span>
+                                </div>
                             )}
                         </div>
-                        <div className="p-6 h-96 flex flex-col gap-4">
-                            <div className="flex gap-2 items-center">
-                                <FaPenNib size={20} color="#fff" />
-                                <span className="font-google font-light text-lg">Observações (opcional)</span>
-                            </div>
+                        {cart.length > 0 ? (
+                            <div className="p-6 h-96 flex flex-col gap-4">
+                                <div className="flex gap-2 items-center">
+                                    <FaPenNib size={20} color="#fff" />
+                                    <span className="font-google font-light text-lg">Observações (opcional)</span>
+                                </div>
 
-                            <textarea 
-                            placeholder="Ex: Sem carne seca, bem separado, etc..."
-                            className="w-full h-full border border-[#242424] rounded-xl p-2 font-google 
-                            hover:border-[#515151] focus:border-[#515151]"
-                            name="observacao"></textarea>
-                        </div>
+                                <textarea 
+                                placeholder="Ex: Sem carne seca, bem separado, etc..."
+                                className="w-full h-full border border-[rgb(36,36,36)] rounded-xl p-2 font-google 
+                                hover:border-[#515151] focus:border-[#515151]"
+                                name="observacao"
+                                onChange={(e)=> setDescription(e.target.value)}
+                                ></textarea>
+                            </div>
+                        ):(
+                            <></>
+                        )}
                     </section>
                     
                     {/* PRICE CART AND METHOD PAYMENT */}
-                    <section className="w-full max-w-5/12 h-screen flex flex-col gap-20">
+                    <section className="w-full max-w-5/12 h-screen flex flex-col gap-10">
                         {/* PRICE */}
-                        <div className="w-full border border-[#747474]">
-                            <span>div 2.1</span>
+                        <div className="w-full p-6 border border-[#747474] rounded-lg">
+                            <div className="flex gap-2 items-center">
+                                <FiShoppingBag color="#F97318" size={20} />
+                                <h1 className="font-google text-xl">Resumo do pedido</h1>
+                            </div>
+
+                            <div className="w-full divide-y divide-[#505050]">
+                                {/* ITENS */}
+                                <div className="flex items-center justify-between py-3 mt-6">
+                                    <h1 className="font-google font-light">{cart.length} {cart.length === 1 ? "Item" : "Itens"}</h1>
+                                </div>
+                                {/* FRETE */}
+                                <div className="flex items-center justify-between py-3">
+                                    <h1 className="font-google font-light">Frete</h1>
+                                    <div className="flex gap-2 items-center">
+                                        {freteGratis && (
+                                            <span className="font-google font-light text-sm line-through text-[#D5D2D2]">R$ 5,00</span>
+                                        )}
+
+                                        <span className="font-google font-light text-xl">
+                                            {freteCalc.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}
+                                        </span>
+                                    </div>
+                                </div>
+                                {/* SUBTOTAL */}
+                                <div className="flex items-center justify-between py-3">
+                                    <h1 className="font-google font-light">Subtotal</h1>
+                                    <span className="font-google font-light text-xl">{subtotal.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</span>
+                                </div>
+                                {/* TOTAL */}
+                                <div className="flex items-center justify-between py-3">
+                                    <h1 className="font-google font-medium">Total</h1>
+                                    <span className="font-google font-light text-2xl text-[#F97318]">{total.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</span>
+                                </div>
+                            </div>
                         </div>
 
                         {/* METHOD PAYMENT */}
-                        <div className="w-full border border-[#747474]">
-                            <span>div 2.2</span>
+                        <div className="w-full h-full p-6 border border-[#747474] rounded-lg">
+                            <div className="flex gap-2 items-center">
+                                <FiShoppingBag color="#F97318" size={20} />
+                                <h1 className="font-google text-xl">Forma de pagamento</h1>
+                            </div>
+
+                            <div className="w-full">
+                                {/* DÉBITO */}
+                                <label className="flex items-center justify-between p-3.5 border border-[#747474] rounded-xl mt-8 cursor-pointer">
+                                    <div className="flex gap-2">
+                                        <CiCreditCard1 color="#fff" size={24} />
+                                        <h1 className="font-google font-light">Cartão de débito</h1>
+                                    </div>
+                                    <input 
+                                     className="cursor-pointer"
+                                     type="radio" 
+                                     name="Option" 
+                                     onClick={()=> setMethodPay("debito")}
+                                    />
+                                </label>
+                                {/* CRÉDITO */}
+                                <label className="group flex items-center justify-between p-3.5 border border-[#747474] rounded-xl mt-6 cursor-pointer">
+                                    <div className="flex gap-2">
+                                        <CiCreditCard1 color="#fff" size={24} />
+                                        <h1 className="font-google font-light">Cartão de crédito</h1>
+                                    </div>
+                                    <input 
+                                     className="cursor-pointer group"
+                                     type="radio" 
+                                     name="Option" 
+                                     onClick={()=> setMethodPay("credito")}
+                                    />
+                                </label>
+                                {/* PIX */}
+                                <label className="flex items-center justify-between p-3.5 border border-[#747474] rounded-xl mt-6 cursor-pointer">
+                                    <div className="flex gap-2">
+                                        <FaPix color="#fff" size={24} />
+                                        <h1 className="font-google font-light">Pix</h1>
+                                    </div>
+                                    <input 
+                                     className="cursor-pointer"
+                                     type="radio" 
+                                     name="Option" 
+                                     onClick={()=> setMethodPay("pix")}
+                                    />
+                                </label>
+                                {/* DINHEIRO */}
+                                <label className="flex items-center justify-between p-3.5 border border-[#747474] rounded-xl mt-6 cursor-pointer">
+                                    <div className="flex gap-2">
+                                        <FaMoneyBills color="#fff" size={24} />
+                                        <h1 className="font-google font-light">Dinheiro</h1>
+                                    </div>
+                                    <input 
+                                     className="cursor-pointer"
+                                     type="radio" 
+                                     name="Option" 
+                                     onClick={()=> setMethodPay("dinheiro")}
+                                    />
+                                </label>
+                            </div>
+
+
+                            {/* FINALIZAR PEDIDO */}
+                            <div className="w-full mt-10 flex flex-col items-center">
+                                <Button 
+                                 onClick={sendOrderToWhatsApp}
+                                 text="Finalizar compra" 
+                                />
+
+                                <div className="w-72 flex justify-center items-center mt-4">
+                                    <IoIosLock size={24} color="#9F9F9F" />
+                                    <span className="font-google font-light text-sm text-[#9F9F9F] text-center">Você será redirecionado para o whatsapp para finalizar o seu pedido.</span>
+                                </div>
+                            </div>
                         </div>
                     </section>
                 </section>

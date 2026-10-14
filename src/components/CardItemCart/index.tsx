@@ -3,42 +3,41 @@ import React from "react";
 import Image from "next/image";
 import { FaRegTrashAlt } from "react-icons/fa";
 
-// Types
-import { itemCartProps } from "@/context/Cart/useCart";
+// Types and Context
+import { cartContext, itemCartProps } from "@/context/Cart/useCart";
 interface removeItemCartProps extends itemCartProps{
-    item: itemCartProps;
     removeItemCart: (id: string)=> void;
-    valueFinal?: string;
 }
 
-export function CardItemCart({removeItemCart, id, item, name, description, price, category, quantity, photo, valueFinal}: removeItemCartProps){
-        const [qtd, setQtd] = React.useState(quantity);
+export function CardItemCart({removeItemCart, id, name, description, price, category, quantity, photo, subtotal}: removeItemCartProps){
+        
+    const context = React.useContext(cartContext);
 
-        function addList(value: number){
-            const addNumber = value + 1;
-            setQtd(addNumber);
+        if(!context){
+            throw new Error("CardItemCart precisa estar dentro de CartProvider.");
         }
-    
-        function delList(value: number){
-            if(value <= 1){
-                removeItemCart(item.id);
+
+        const { updateQuantity } = context;
+
+        function addList() {
+            updateQuantity(id, quantity + 1);
+        }
+
+        function delList() {
+            if (quantity <= 1) {
+                removeItemCart(id);
                 return;
             }
-            else{
-                const removeNumber = value - 1;
-                setQtd(removeNumber);
-            }
+
+            updateQuantity(id, quantity - 1);
         }
 
-        function recalculatePrice(){
-            const calculateNewValue = Number(price) * qtd;
-            return calculateNewValue.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
-        }
 
     return(
         <>
             <div
-             className="w-full flex justify-between first:pb-4 pb-4 last:pb-0">
+            key={id}
+            className="w-full flex justify-between first:pb-4 pb-4 last:pb-0">
                 <div className="w-full max-w-10/12 flex gap-2 items-center">
                     <div className="h-44 w-44 shrink-0">
                         <Image 
@@ -61,13 +60,13 @@ export function CardItemCart({removeItemCart, id, item, name, description, price
                         <div className="w-full flex justify-between mt-2">
                             <div className="flex gap-6 border border-[#505050] items-center py-1 px-2 rounded-md">
                                 <button
-                                onClick={()=> delList(qtd)}
+                                onClick={()=> delList()}
                                 className="font-google font-semibold text-2xl hover:cursor-pointer">-</button>
 
-                                <span className="font-google font-bold">{qtd}</span>
+                                <span className="font-google font-bold">{quantity}</span>
 
                                 <button
-                                onClick={()=> addList(qtd)}
+                                onClick={()=> addList()}
                                 className="font-google font-semibold text-2xl hover:cursor-pointer">+</button>
                             </div>
 
@@ -85,7 +84,7 @@ export function CardItemCart({removeItemCart, id, item, name, description, price
                     <span className="font-google font-light bg-[#1D1D1D] border border-[#666666] py-1 px-2 rounded-lg">{category}</span>
                     <div>
                         <h1 className="text-end font-google text-md">Subtotal</h1>
-                        <span className="font-google font-medium text-xl">{recalculatePrice()}</span>
+                        <span className="font-google font-medium text-xl">{subtotal.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</span>
                     </div>
                 </div>
             </div>

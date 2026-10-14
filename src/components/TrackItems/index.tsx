@@ -1,6 +1,6 @@
 import { LuSoup } from "react-icons/lu";
 
-export function TrackItems({ quantity }: { quantity: number }) {
+export function TrackItems({ quantity }:{ quantity: number }){
   return (
     <>
       {Array.from({ length: quantity }, (_, index) => (

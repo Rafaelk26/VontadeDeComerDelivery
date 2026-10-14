@@ -25,7 +25,7 @@ export function Button({ text, linkPath, ...rest }: ButtonProps){
             ) : (
                 <button 
                 { ...rest }
-                className=" flex w-max items-center gap-2 rounded-md bg-[#F97318] px-5 py-2.5 font-google 
+                className=" flex w-full justify-center items-center gap-2 rounded-md bg-[#F97318] px-5 py-2.5 font-google 
                     text-lg font-semibold text-black transition-all hover:scale-105 hover:cursor-pointer
                     hover:text-white">
                     { text }

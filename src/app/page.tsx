@@ -112,7 +112,10 @@ export default function Home(){
           </section>
 
           <div className="mt-10 flex justify-center">
-            <Button text="Ver mais opções"/>
+            <Button 
+             linkPath="/cardapio"
+             text="Ver mais opções"
+            />
           </div>
         </Wrapper>
       </main>

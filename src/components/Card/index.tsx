@@ -54,6 +54,7 @@ export function Card({ product }: CardProps){
       price: product.price,
       photo: product.image,
       quantity,
+      subtotal: Number(product.price) * quantity,
     });
   }
 

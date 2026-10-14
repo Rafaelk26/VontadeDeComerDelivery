@@ -51,7 +51,7 @@ export default function Cardapio(){
                 <Wrapper>
                     <section className="relative flex min-h-[calc(80vh)] items-center">
                         {/* CONTENT */}
-                        <div className="relative z-10 w-full max-w-[650px] pb-10 ps-10 mt-52">
+                        <div className="relative z-10 w-full max-w-162.5 pb-10 ps-10 mt-52">
                             <h4 className="font-google text-md italic text-white">
                                 Escolha sua opção em
                             </h4>
