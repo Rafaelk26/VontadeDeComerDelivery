@@ -3,8 +3,9 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { IoMdCart } from "react-icons/io";
-import { MdSpaceDashboard, MdOutlineRestaurantMenu} from "react-icons/md";
 import { usePathname } from "next/navigation";
+import { MdSpaceDashboard, MdOutlineRestaurantMenu} from "react-icons/md";
+import { FaUserCircle } from "react-icons/fa";
 
 // Assets
 import Logo from "../../../public/Logo.png";
@@ -88,6 +89,80 @@ export function Header(){
             )}
           </button>
         </Link>
+      </div>
+    </header>
+  );
+}
+
+
+
+
+
+export function HeaderAdmin(){
+
+  const pathname = usePathname();
+
+  return (
+    <header className="w-full flex items-center justify-between 
+    bg-[#0B0B0B] py-2 px-8 border-b border-[#505050] fixed top-0 z-50">
+      {/* LOGO AND MENU */}
+      <div className="flex gap-10 items-center">
+        <Image
+         alt="Logo Oficial"
+         src={Logo}
+         className="w-12 h-12"
+        />
+
+        <nav>
+          <ul className="flex gap-6">
+            {/* PAINEL */}
+            <li>
+              <Link
+                href="/admin/home"
+                className={`font-google transition-all group flex gap-2 hover:cursor-pointer
+                ${pathname === "/admin/home" ? "text-[#F97318]" 
+                : "text-white hover:text-[#F97318]"}`}>
+                <MdSpaceDashboard
+                 size={24}
+                 className={`
+                    ${pathname === "/admin/home" ? "text-[#F97318]"
+                    : "text-white group-hover:text-[#F97318]"}`} />
+                Painel
+              </Link>
+            </li>
+
+            {/* PEDIDOS */}
+            <li>
+              <Link
+                href="/admin/categoria"
+                className={`font-google transition-all group flex gap-2
+                hover:cursor-pointer
+                ${pathname === "/admin/categoria" ? "text-[#F97318]" 
+                : "text-white hover:text-[#F97318]"}`}>
+                <MdOutlineRestaurantMenu
+                 size={24}
+                 className={`
+                    ${pathname === "/admin/categoria" ? "text-[#F97318]" 
+                    : "text-white group-hover:text-[#F97318]"}`} />
+                Categorias
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      {/* ADMIN */}
+      <div className="w-max flex justify-center">
+        <button className="relative flex items-center gap-2">
+          <FaUserCircle
+            size={24}
+            color="#9F9F9F"
+          />
+          <div className="flex flex-col items-start gap-0">
+            <h4 className="font-google font-medium text-sm">Administrador</h4>
+            <span className="font-google font-light text-[#747474] text-xs">Perfil</span>
+          </div>
+        </button>
       </div>
     </header>
   );

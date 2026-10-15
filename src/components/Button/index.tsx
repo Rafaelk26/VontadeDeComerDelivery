@@ -34,3 +34,17 @@ export function Button({ text, linkPath, ...rest }: ButtonProps){
         </>
     )
 }
+
+export function ButtonCancel({ text, ...rest }: ButtonProps){
+    return(
+        <>
+            <button 
+            { ...rest }
+            className=" flex w-full justify-center items-center gap-2 rounded-md bg-transparent px-5 py-2.5 font-google 
+                text-lg font-semibold text-white transition-all hover:scale-105 hover:cursor-pointer border border-[#8C8C8C] hover:bg-stone-900
+                hover:text-white">
+                { text }
+            </button>
+        </>
+    )
+}
