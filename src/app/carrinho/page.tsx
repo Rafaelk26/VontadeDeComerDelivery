@@ -75,8 +75,12 @@ export default function Carrinho(){
                     <div className="absolute z-50 top-12 flex gap-2 items-center ps-10">
                         <IoMdCart size={48} color="#F97318" />
                         <div className="">
-                            <h1 className="font-google font-bold text-5xl text-white">Meu carrinho</h1>
-                            <span className="font-google font-light text-md">Veja os itens adicionados no carrinho antes de finalizar o seu pedido.</span>
+                            <h1 className="font-google font-bold text-5xl text-white">
+                                Meu carrinho
+                            </h1>
+                            <span className="font-google font-light text-md">
+                                Veja os itens adicionados no carrinho antes de finalizar o seu pedido.
+                            </span>
                         </div>
                     </div>
                 </Wrapper>
@@ -107,7 +111,9 @@ export default function Carrinho(){
                             )   )
                             ):(
                                 <div className="w-full h-full flex flex-col justify-center">
-                                    <span className="text-center font-google">Nenhum produto adicionado.</span>
+                                    <span className="text-center font-google">
+                                        Nenhum produto adicionado.
+                                    </span>
                                 </div>
                             )}
                         </div>
@@ -115,7 +121,9 @@ export default function Carrinho(){
                             <div className="p-6 h-96 flex flex-col gap-4">
                                 <div className="flex gap-2 items-center">
                                     <FaPenNib size={20} color="#fff" />
-                                    <span className="font-google font-light text-lg">Observações (opcional)</span>
+                                    <span className="font-google font-light text-lg">
+                                        Observações (opcional)
+                                    </span>
                                 </div>
 
                                 <textarea 
@@ -137,20 +145,28 @@ export default function Carrinho(){
                         <div className="w-full p-6 border border-[#747474] rounded-lg">
                             <div className="flex gap-2 items-center">
                                 <FiShoppingBag color="#F97318" size={20} />
-                                <h1 className="font-google text-xl">Resumo do pedido</h1>
+                                <h1 className="font-google text-xl">
+                                    Resumo do pedido
+                                </h1>
                             </div>
 
                             <div className="w-full divide-y divide-[#505050]">
                                 {/* ITENS */}
                                 <div className="flex items-center justify-between py-3 mt-6">
-                                    <h1 className="font-google font-light">{cart.length} {cart.length === 1 ? "Item" : "Itens"}</h1>
+                                    <h1 className="font-google font-light">
+                                        {cart.length} {cart.length === 1 ? "Item" : "Itens"}
+                                    </h1>
                                 </div>
                                 {/* FRETE */}
                                 <div className="flex items-center justify-between py-3">
-                                    <h1 className="font-google font-light">Frete</h1>
+                                    <h1 className="font-google font-light">
+                                        Frete
+                                    </h1>
                                     <div className="flex gap-2 items-center">
                                         {freteGratis && (
-                                            <span className="font-google font-light text-sm line-through text-[#D5D2D2]">R$ 5,00</span>
+                                            <span className="font-google font-light text-sm line-through text-[#D5D2D2]">
+                                                R$ 5,00
+                                            </span>
                                         )}
 
                                         <span className="font-google font-light text-xl">
@@ -160,13 +176,19 @@ export default function Carrinho(){
                                 </div>
                                 {/* SUBTOTAL */}
                                 <div className="flex items-center justify-between py-3">
-                                    <h1 className="font-google font-light">Subtotal</h1>
-                                    <span className="font-google font-light text-xl">{subtotal.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</span>
+                                    <h1 className="font-google font-light">
+                                        Subtotal
+                                    </h1>
+                                    <span className="font-google font-light text-xl">
+                                        {subtotal.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}
+                                    </span>
                                 </div>
                                 {/* TOTAL */}
                                 <div className="flex items-center justify-between py-3">
                                     <h1 className="font-google font-medium">Total</h1>
-                                    <span className="font-google font-light text-2xl text-[#F97318]">{total.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</span>
+                                    <span className="font-google font-light text-2xl text-[#F97318]">
+                                        {total.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -175,7 +197,9 @@ export default function Carrinho(){
                         <div className="w-full h-full p-6 border border-[#747474] rounded-lg">
                             <div className="flex gap-2 items-center">
                                 <FiShoppingBag color="#F97318" size={20} />
-                                <h1 className="font-google text-xl">Forma de pagamento</h1>
+                                <h1 className="font-google text-xl">
+                                    Forma de pagamento
+                                </h1>
                             </div>
 
                             <div className="w-full">
@@ -183,7 +207,9 @@ export default function Carrinho(){
                                 <label className="flex items-center justify-between p-3.5 border border-[#747474] rounded-xl mt-8 cursor-pointer">
                                     <div className="flex gap-2">
                                         <CiCreditCard1 color="#fff" size={24} />
-                                        <h1 className="font-google font-light">Cartão de débito</h1>
+                                        <h1 className="font-google font-light">
+                                            Cartão de débito
+                                        </h1>
                                     </div>
                                     <input 
                                      className="cursor-pointer"
@@ -196,7 +222,9 @@ export default function Carrinho(){
                                 <label className="group flex items-center justify-between p-3.5 border border-[#747474] rounded-xl mt-6 cursor-pointer">
                                     <div className="flex gap-2">
                                         <CiCreditCard1 color="#fff" size={24} />
-                                        <h1 className="font-google font-light">Cartão de crédito</h1>
+                                        <h1 className="font-google font-light">
+                                            Cartão de crédito
+                                        </h1>
                                     </div>
                                     <input 
                                      className="cursor-pointer group"
@@ -209,7 +237,9 @@ export default function Carrinho(){
                                 <label className="flex items-center justify-between p-3.5 border border-[#747474] rounded-xl mt-6 cursor-pointer">
                                     <div className="flex gap-2">
                                         <FaPix color="#fff" size={24} />
-                                        <h1 className="font-google font-light">Pix</h1>
+                                        <h1 className="font-google font-light">
+                                            Pix
+                                        </h1>
                                     </div>
                                     <input 
                                      className="cursor-pointer"
@@ -222,7 +252,9 @@ export default function Carrinho(){
                                 <label className="flex items-center justify-between p-3.5 border border-[#747474] rounded-xl mt-6 cursor-pointer">
                                     <div className="flex gap-2">
                                         <FaMoneyBills color="#fff" size={24} />
-                                        <h1 className="font-google font-light">Dinheiro</h1>
+                                        <h1 className="font-google font-light">
+                                            Dinheiro
+                                        </h1>
                                     </div>
                                     <input 
                                      className="cursor-pointer"
@@ -243,7 +275,9 @@ export default function Carrinho(){
 
                                 <div className="w-72 flex justify-center items-center mt-4">
                                     <IoIosLock size={24} color="#9F9F9F" />
-                                    <span className="font-google font-light text-sm text-[#9F9F9F] text-center">Você será redirecionado para o whatsapp para finalizar o seu pedido.</span>
+                                    <span className="font-google font-light text-sm text-[#9F9F9F] text-center">
+                                        Você será redirecionado para o whatsapp para finalizar o seu pedido.
+                                    </span>
                                 </div>
                             </div>
                         </div>

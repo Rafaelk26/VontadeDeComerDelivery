@@ -27,6 +27,7 @@ export const products: Product[] = [
     description: "Caldo cremoso de batata com couve e linguiça defumada.",
     price: "11",
     size: "300ml",
+    status: true,
     image: "/Caldo.png",
   },
 
@@ -37,6 +38,7 @@ export const products: Product[] = [
     description: "Frango grelhado acompanhado de arroz, feijão e salada.",
     price: "18",
     size: "500g",
+    status: true,
     image: "/Caldo.png",
   },
 
