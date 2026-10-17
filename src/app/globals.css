@@ -47,6 +47,7 @@ body {
   animation: bounce 1s 3.5;
 }
 
+
 @keyframes animate-person{
   from{
     transform: translate(0%);

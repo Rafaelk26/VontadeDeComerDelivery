@@ -32,16 +32,26 @@ export function ModalDeleteProduct({ product, onClose, onDelete }: ModalEditProd
         bg-[#0C0C0C] p-5"
       >
         <h1 id="edit-product-title" className="font-google text-xl font-medium">
-          Deletar Produto
+          Deseja deletar esse produto?
         </h1>
 
-        <Image 
-         className="h-12 w-12 object-cover border border-[#747474]"
-         width={1000}
-         height={1000}
-         src={product.image}
-         alt={product.name}
-        />
+        <div className="flex flex-col items-center gap-3 my-16">
+          <Image 
+            className="h-12 w-12 object-cover border border-[#747474] rounded-md"
+            width={1000}
+            height={1000}
+            src={product.image}
+            alt={product.name}
+          />
+
+          <div className="min-w-0 w-full flex flex-col items-center gap-1">
+            <h1 className="truncate font-google font-medium text-2xl">
+              {product.name}
+            </h1>
+            <span className="truncate w-11/12 font-google text-base text-[#929292] text-center">{product.description}</span>
+            <span className="truncate font-google text-base text-[#929292]">Valor: {Number(product.price).toLocaleString("pt-br", {currency: "BRL", style:"currency"})}</span>
+          </div>
+        </div>
 
         {/* Botões */}
         <div className="mt-6 flex gap-2">

@@ -4,8 +4,8 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 import { FaUserAlt, FaGoogle } from "react-icons/fa";
 import { BsBoxSeamFill } from "react-icons/bs";
-import { IoCartOutline } from "react-icons/io5";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
+import { BiSolidCategoryAlt } from "react-icons/bi";
 import { LiaCloudUploadAltSolid } from "react-icons/lia";
 import { MdDeleteOutline } from "react-icons/md";
 
@@ -26,9 +26,9 @@ import { products, Product } from "@/data/Products";
 export default function AdminHome(){
     // PAGE
     const [ categoriesData, setCategoriesData ] = React.useState<Category[]>([]);
-    const [ searchProducts, setSearchProducts ] = React.useState<string>("");
-    const [ searchCategories, setSearchCategories ] = React.useState<string>("");
     const [ yourProducts, setYourProducts ] = React.useState<Product[]>([]);
+    const [ searchCategories, setSearchCategories ] = React.useState<string>("");
+    const [ searchProducts, setSearchProducts ] = React.useState<string>("");
 
     // MODAIS
     const [ showModalEdit, setShowModalEdit ] = React.useState<boolean>(false);
@@ -126,7 +126,7 @@ export default function AdminHome(){
                                 <div className="flex gap-4 items-center">
                                     <BsBoxSeamFill size={32} color="#F97318" />
                                     <div className="flex flex-col">
-                                        <span className="font-google text-xs">Produtos</span>
+                                        <span className="font-google text-xs">Produtos registrados</span>
                                         <h1 className="font-google text-2xl font-semibold">{products.length}</h1>
                                     </div>
                                 </div>
@@ -139,14 +139,14 @@ export default function AdminHome(){
                         <div className="w-full border border-[#747474] px-4 py-8 bg-[#0C0C0C] rounded-lg">
                             <div className="flex gap-4 items-center justify-between">
                                 <div className="flex gap-4 items-center">
-                                    <IoCartOutline size={32} color="#F97318" />
+                                    <BiSolidCategoryAlt size={32} color="#F97318" />
                                     <div className="flex flex-col">
-                                        <span className="font-google text-xs">Pedidos Hoje</span>
-                                        <h1 className="font-google text-2xl font-semibold">16</h1>
+                                        <span className="font-google text-xs">Categorias registradas</span>
+                                        <h1 className="font-google text-2xl font-semibold">{categories.length - 1}</h1>
                                     </div>
                                 </div>
                                 <div className="w-max">
-                                    <span className="font-google text-green-400">+ 5%</span>
+                                    <span className="font-google text-green-400">+ 2 novos</span>
                                 </div>
                             </div>
                         </div>
