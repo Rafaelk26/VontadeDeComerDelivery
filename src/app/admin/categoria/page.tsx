@@ -12,6 +12,10 @@ import { ModalEditCategory } from "@/components/ModalEditCategory";
 import { ModalDeleteCategory } from "@/components/ModalDeleteCategory";
 import { Footer } from "@/components/Footer";
 
+// Functions
+import { getAllProducts } from '@/function/getAllProducts';
+import { getAllCategories } from '@/function/getAllCategory';
+
 // Data
 import { categories, Category } from "@/data/Categories";
 import { Product, products } from "@/data/Products";
@@ -45,7 +49,16 @@ export default function AdminCategoria(){
         getCategories();
         getProducts();
     }, []);
-    
+
+    React.useEffect(()=> { 
+        async function getItemsInLocal(){
+            await getAllProducts();
+            await getAllCategories();
+        }
+
+        getItemsInLocal();
+    }, []);    
+
     function handleSubmitNewCategory(){
         const name = nameForm.trim();
         const color = colorForm.toUpperCase();
@@ -112,12 +125,12 @@ export default function AdminCategoria(){
                 <div className="w-full flex mt-4 gap-6 mb-16">
                     <div className="max-w-8/12 w-full h-150 bg-[#0C0C0C] border border-[#747474] rounded-xl p-5">
                         <div className="w-full grid grid-cols-2 gap-4">
-                            {categoriesPage.slice(1).map((category) => (
+                            {categoriesPage.slice(1).map((category)=> (
                                 <CardCategoryAdmin
                                  key={category.id}
                                  name={category.name}
                                  color={category.color ? category.color : ""}
-                                 quantityItems={productsPage.filter((p) => category.name === p.category).length}
+                                 quantityItems={productsPage.filter((p)=> category.name === p.category).length}
                                  onEdit={() => {
                                   setCategoryEditSelected(category);
                                   setShowModalEditCategory(true);
@@ -240,8 +253,8 @@ export default function AdminCategoria(){
             {showModalDeleteCategory && categoryDeleteSelected && (
                 <ModalDeleteCategory
                  category={categoryDeleteSelected}
-                 product={productsPage.filter((p) => p.category === categoryDeleteSelected.name).length}
-                 onClose={() => {
+                 product={productsPage.filter((p)=> p.category === categoryDeleteSelected.name).length}
+                 onClose={()=> {
                   setShowModalDeleteCategory(false);
                   setCategoryDeleteSelected(null);
                  }}

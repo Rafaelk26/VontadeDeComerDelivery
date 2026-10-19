@@ -1,0 +1,11 @@
+{
+    "workbench.activityBar.autoHide": false,
+    "workbench.activityBar.compact": false,
+    "workbench.editor.dragToOpenWindow": true,
+    "workbench.editor.splitOnDragAndDrop": true,
+    "workbench.editor.tabActionCloseVisibility": true,
+    "workbench.editor.wrapTabs": false,
+    "workbench.secondarySideBar.showLabels": true,
+    "workbench.secondarySideBar.forceMaximized": false,
+    "workbench.sideBar.location": "left"
+}
