@@ -1,33 +1,39 @@
 "use client";
-import React, { ReactNode } from "react";
+import React, { createContext, useContext, useState } from "react";
 
-// Types
-type userProps = {
-    children: ReactNode
-}
+type UserProps = {
+  id: string;
+  name: string;
+  email: string;
+};
 
-type itemsUsersProps = {
-    id: string;
-    name: string;
-    email: string;
-}
+type UserContextProps = {
+    user: UserProps | null;
+    handleUserInContext: (user: UserProps | null) => void;
+};
 
-type userContextProps = {
-    user: itemsUsersProps[];
-    setUser: React.Dispatch<React.SetStateAction<itemsUsersProps[]>>
-}
+const userContext = createContext<UserContextProps | undefined>(undefined);
 
-// Create context
-export const userContext = React.createContext<userContextProps | undefined>(undefined);
+export function UserProvider({children}: {children: React.ReactNode}){
+    const [user, setUser] = useState<UserProps | null>(null);
 
-// Create provider
-export function UserProvider({ children }: userProps){
-    
-    const [user, setUser] = React.useState<itemsUsersProps[]>([]);
+    function handleUserInContext(user: UserProps | null) {
+        setUser(user);
+    }
 
-    return(
-        <userContext.Provider value={{ user, setUser }}>
-            { children }
+    return (
+        <userContext.Provider value={{ user, handleUserInContext }}>
+        {children}
         </userContext.Provider>
-    )
+    );
+}
+
+export function useUser(){
+    const context = useContext(userContext);
+
+    if (!context){
+        throw new Error("useUser deve ser usado dentro de UserProvider.");
+    }
+
+    return context;
 }
