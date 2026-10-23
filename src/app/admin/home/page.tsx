@@ -19,9 +19,17 @@ import { ModalEditProduct } from "@/components/ModalEditProduct";
 import { ModalDeleteProduct } from "@/components/ModalDeleteProduct";
 import { Footer } from "@/components/Footer";
 
-// Data
-import { categories, Category } from "@/types/Categories";
-import { products, Product } from "@/types/Products";
+// Functions
+import { getAllProducts } from "@/function/getAllProducts";
+import { getAllCategories } from "@/function/getAllCategory";
+import { handleProductInServer } from "@/function/handleProductInServer";
+import { uploadProductImage } from "@/function/uploadProductImage";
+import { clearAdminDataCache } from "@/lib/cache/adminCache";
+
+// Types
+import type { Category } from "@/types/Categories";
+import type { Product } from "@/types/Products";
+import { supabase } from "@/server/supabase/supabase";
 
 export default function AdminHome(){
     // PAGE
@@ -41,20 +49,39 @@ export default function AdminHome(){
     const [ descriptionForm, setDescriptionForm ] = React.useState<string>("");
     const [ priceForm, setPriceForm ] = React.useState<string>("");
     const [ categoryForm, setCategoryForm ] = React.useState<string>("");
-    const [ imageForm, setImageForm ] = React.useState<string>();
+    const [ imageFileForm, setImageFileForm ] = React.useState<File | null>(null);
+    const [ imageForm, setImageForm ] = React.useState<string>("");
     const [ statusForm, setStatusForm ] = React.useState<boolean>(false);
 
-    React.useEffect(()=> {
-        function getCategories(){
-            setCategoriesData(categories.slice(1, 10));
+    React.useEffect(() => {
+        let cancelled = false;
+
+        async function loadAdminData() {
+            try {
+            const [productsResult, categoriesResult] = await Promise.all([
+                getAllProducts(),
+                getAllCategories(),
+            ]);
+
+            if (cancelled) return;
+
+            if (productsResult !== null) {
+                setYourProducts(productsResult);
+            }
+
+            if (categoriesResult !== null) {
+                setCategoriesData(categoriesResult);
+            }
+            } catch (error) {
+                console.error("Erro ao carregar dados da Home:", error);
+            }
         }
 
-        function getProducts(){
-            setYourProducts(products);
-        }
+        void loadAdminData();
 
-        getCategories();
-        getProducts();
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     const filteredProducts = React.useMemo(()=> {
@@ -86,24 +113,85 @@ export default function AdminHome(){
 
     function handleImageChange(event: React.ChangeEvent<HTMLInputElement>){
         const file = event.target.files?.[0];
-        
+
         if (!file) return;
-        const imageUrl = URL.createObjectURL(file);
-        setImageForm(imageUrl);
+
+        const previewUrl = URL.createObjectURL(file);
+
+        setImageFileForm(file);
+        setImageForm(previewUrl);
     }
 
-    function handleSubmitNewProduct(){
-        
-        const newProduct = {
-            name: nameForm,
-            description: descriptionForm,
-            price: priceForm,
-            category: categoryForm,
-            image: imageForm,
-            status: statusForm,
+    async function handleSubmitNewProduct() {
+        const name = nameForm.trim();
+        const description = descriptionForm.trim();
+        const category = categoryForm.trim();
+        const price = Number(priceForm.replace(",", "."));
+
+        if (!name || !description || !category) {
+            toast.warning("Preencha nome, descrição e categoria.");
+            return;
         }
 
-        console.log(newProduct);
+        if (!Number.isFinite(price) || price <= 0) {
+            toast.warning("Informe um preço válido.");
+            return;
+        }
+
+        if (!imageFileForm) {
+            toast.warning("Selecione uma imagem para o produto.");
+            return;
+        }
+
+        let uploadedPath: string | null = null;
+
+        try {
+            const uploadedImage = await uploadProductImage(imageFileForm);
+            uploadedPath = uploadedImage.path;
+
+            const createdProduct = await handleProductInServer({
+                name,
+                description,
+                price: String(price),
+                category,
+                photo: uploadedImage.url,
+                status: statusForm,
+            });
+
+            setYourProducts((previous) => [
+                createdProduct,
+                ...previous,
+            ]);
+
+            clearAdminDataCache();
+
+            setNameForm("");
+            setDescriptionForm("");
+            setPriceForm("");
+            setCategoryForm("");
+            setStatusForm(false);
+            setImageFileForm(null);
+            setImageForm("");
+
+            toast.success("Produto cadastrado com sucesso.");
+        } catch (error) {
+            console.error("Erro ao cadastrar produto:", error);
+
+            // Se o upload ocorreu, mas o cadastro falhou,
+            // tenta remover o arquivo órfão.
+            if (uploadedPath) {
+                const { error: cleanupError } = await supabase.storage
+                    .from("produtos_imagem")
+                    .remove([uploadedPath]);
+
+                if (cleanupError){
+                    console.error("Erro ao limpar imagem:", cleanupError);
+                    toast.error("Erro ao limpar imagem.")
+                }
+            }
+
+            toast.error("Não foi possível cadastrar o produto.");
+        }
     }
 
     return(
@@ -127,7 +215,7 @@ export default function AdminHome(){
                                     <BsBoxSeamFill size={32} color="#F97318" />
                                     <div className="flex flex-col">
                                         <span className="font-google text-xs">Produtos registrados</span>
-                                        <h1 className="font-google text-2xl font-semibold">{products.length}</h1>
+                                        <h1 className="font-google text-2xl font-semibold">{yourProducts.length}</h1>
                                     </div>
                                 </div>
                                 <div className="w-max">
@@ -142,7 +230,7 @@ export default function AdminHome(){
                                     <BiSolidCategoryAlt size={32} color="#F97318" />
                                     <div className="flex flex-col">
                                         <span className="font-google text-xs">Categorias registradas</span>
-                                        <h1 className="font-google text-2xl font-semibold">{categories.length - 1}</h1>
+                                        <h1 className="font-google text-2xl font-semibold">{categoriesData.length}</h1>
                                     </div>
                                 </div>
                                 <div className="w-max">
@@ -401,7 +489,6 @@ export default function AdminHome(){
                  );
                  setShowModalEdit(false);
                  setSelectedProductEdit(null);
-                 toast.success("Produto salvo com sucesso.");
                  }}
                 />
             )}
@@ -418,7 +505,6 @@ export default function AdminHome(){
                  onDelete={()=> {
                     handleDeleteProduct(selectedProductDel);
                     setShowModalDelete(false);
-                    toast.success("Produto deletado com sucesso.");
                  }}
                 />
             )}

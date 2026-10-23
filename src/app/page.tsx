@@ -1,4 +1,5 @@
-"use client"
+"use client";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -10,35 +11,63 @@ import { TrackItems } from "@/components/TrackItems";
 import { Card } from "@/components/Card";
 import { Footer } from "@/components/Footer";
 
-// Data
-import { products } from '@/types/Products'
+// Functions
+import { getAllProducts } from "@/function/getAllProducts";
+
+// Type
+import type { Product } from "@/types/Products";
 
 // Assets
 import Fundo from "../../public/Background Home.png";
 import Flyer from "../../public/Flyer.png";
 
-export default function Home(){
-  return(
+export default function Home() {
+  const [products, setProducts] = React.useState<Product[]>([]);
+  const [loadingProducts, setLoadingProducts] = React.useState(true);
+  const [productsError, setProductsError] = React.useState(false);
+
+  React.useEffect(() => {
+    async function loadProducts() {
+      try {
+        setLoadingProducts(true);
+        setProductsError(false);
+
+        const data = await getAllProducts();
+
+        if(data) setProducts(data);
+        
+      } catch (error) {
+        console.error("Erro ao carregar produtos:", error);
+        setProductsError(true);
+      } finally {
+        setLoadingProducts(false);
+      }
+    }
+
+    loadProducts();
+  }, []);
+
+  return (
     <>
       <main className="relative min-h-screen overflow-hidden">
         {/* BACKGROUND */}
         <Image
-         src={Fundo}
-         alt="Fundo Home"
-         fill
-         priority
-         quality={100}
-         className="absolute -z-20 object-fill"
+          src={Fundo}
+          alt="Fundo Home"
+          fill
+          priority
+          quality={100}
+          className="absolute -z-20 object-fill"
         />
 
         <Header />
+
         <Wrapper>
           <section className="relative flex min-h-[calc(120vh)] items-center">
-            
             {/* CONTEÚDO */}
             <div className="relative z-10 w-full max-w-162.5 pb-10 ps-10">
               <h4 className="font-google text-md italic text-white">
-                Sabor & Qualidade
+                Sabor &amp; Qualidade
               </h4>
 
               <div className="mt-3 flex flex-col">
@@ -65,14 +94,13 @@ export default function Home(){
 
             {/* FLYER */}
             <div className="absolute bottom-[15%] right-[5%] z-20 md:right-[8%] lg:right-[4%]">
-              <Link href={"/cardapio"}>
+              <Link href="/cardapio">
                 <Image
-                 src={Flyer}
-                 alt="Flyer Vontade de Comer"
-                 priority
-                 quality={100}
-                 className="w-64 object-contain rotate-[-14deg] transition-transform duration-300
-                 hover:cursor-pointer hover:scale-105 hover:drop-shadow-[0_10px_25px_rgba(253, 252, 252, 0.6)]"
+                  src={Flyer}
+                  alt="Flyer Vontade de Comer"
+                  priority
+                  quality={100}
+                  className="w-64 object-contain rotate-[-14deg] transition-transform duration-300 hover:cursor-pointer hover:scale-105 hover:drop-shadow-[0_10px_25px_rgba(253,252,252,0.6)]"
                 />
               </Link>
             </div>
@@ -93,29 +121,51 @@ export default function Home(){
         </div>
       </main>
 
-      {/* CARDAPIO */}
+      {/* CARDÁPIO */}
       <main className="mt-16">
         <Wrapper>
           <h4 className="font-google text-md italic text-[#F97318] ps-10">
             Nossos produtos
           </h4>
+
           <h1 className="font-google text-3xl font-regular leading-[0.95] text-white ps-10 md:text-3xl">
             O melhor do nosso cardápio
           </h1>
+
           <div className="w-48 border border-[#F97318] mt-3 ms-10" />
 
-
           <section className="px-10 grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
-            {products.map((i)=> (
-              <Card key={i.id} product={i} />
-            ))}
+            {loadingProducts && (
+              <p className="col-span-full text-center text-gray-400 font-google">
+                Carregando produtos...
+              </p>
+            )}
+
+            {!loadingProducts && productsError && (
+              <p className="col-span-full text-center text-red-400 font-google">
+                Não foi possível carregar os produtos. Tente novamente mais tarde.
+              </p>
+            )}
+
+            {!loadingProducts &&
+              !productsError &&
+              products.length === 0 && (
+                <p className="col-span-full text-center text-gray-400 font-google">
+                  Nenhum produto disponível no momento.
+                </p>
+              )}
+
+            {!loadingProducts && !productsError &&
+              products
+              .filter((product) => product.status === true)
+              .slice(0, 8)
+              .map((product) => (
+                <Card key={product.id} product={product} />
+              ))}
           </section>
 
           <div className="mt-10 flex justify-center">
-            <Button 
-             linkPath="/cardapio"
-             text="Ver mais opções"
-            />
+            <Button linkPath="/cardapio" text="Ver mais opções" />
           </div>
         </Wrapper>
       </main>

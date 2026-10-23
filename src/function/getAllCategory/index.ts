@@ -1,17 +1,34 @@
 // Database
 import { supabase } from "@/server/supabase/supabase";
 
-export async function getAllCategories(){
-    try{
-        const { data, error } = await supabase
-        .from("categoria")
-        .select("*");
+// Cache
+import { adminDataCache } from "@/lib/cache/adminCache";
 
-        if(error) throw new Error("Erro no processo de busca.");
+// Type
+import type { Category } from "@/types/Categories";
 
-        return data;
+export async function getAllCategories(): Promise<Category[] | null>{
+  if (adminDataCache.categories !== null) {
+    return adminDataCache.categories;
+  }
+
+  try{
+    const { data, error } = await supabase
+      .from("categoria")
+      .select("*");
+
+    if(error){
+      throw error;
     }
-    catch(err){
-        console.error("Erro ao buscar categorias", err);
-    }
+
+    const categories = (data ?? []) as Category[];
+
+    adminDataCache.categories = categories;
+
+    return categories;
+  } 
+  catch(error){
+    console.error("Erro ao buscar categorias:", error);
+    return null;
+  }
 }

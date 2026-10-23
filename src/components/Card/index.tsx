@@ -52,7 +52,7 @@ export function Card({ product }: CardProps){
       description: product.description,
       category: product.category,
       price: product.price,
-      photo: product.image,
+      photo: product.photo,
       quantity,
       subtotal: Number(product.price) * quantity,
     });
@@ -62,7 +62,7 @@ export function Card({ product }: CardProps){
     <div className="w-full h-full border-2 border-[#505050] rounded-2xl overflow-hidden flex flex-col shrink-0">
         <Image
          alt={product.name}
-         src={product.image}
+         src={product.photo}
          width={500}
          height={300}
          className="w-full h-52 object-cover"

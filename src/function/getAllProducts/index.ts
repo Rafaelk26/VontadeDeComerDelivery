@@ -1,17 +1,32 @@
 // Database
 import { supabase } from "@/server/supabase/supabase";
 
-export async function getAllProducts(){
-    try{
-        const { data, error } = await supabase
-        .from("produtos")
-        .select("*");
+// Cache
+import { adminDataCache } from "@/lib/cache/adminCache";
 
-        if(error) throw new Error("Erro no processo de busca.");
+// Type
+import type { Product } from "@/types/Products";
 
-        return data;
+export async function getAllProducts(): Promise<Product[] | null>{
+  if (adminDataCache.products !== null) {
+    return adminDataCache.products;
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("produtos")
+      .select("*");
+
+    if (error) {
+      throw error;
     }
-    catch(err){
-        console.error("Erro ao buscar produtos", err);
-    }
+
+    const products = (data ?? []) as Product[];
+
+    adminDataCache.products = products;
+    return products;
+  } catch (error) {
+    console.error("Erro ao buscar produtos:", error);
+    return null;
+  }
 }

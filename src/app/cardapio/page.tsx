@@ -11,27 +11,54 @@ import { MenuModal } from "@/components/MenuModal";
 import { OptionCategory } from "@/components/OptionCategory";
 import { Footer } from "@/components/Footer";
 
-// Data
-import { categories } from "@/types/Categories";
+// Functions
+import { getAllCategories } from "@/function/getAllCategory";
+
+// Type
+import { Category } from "@/types/Categories";
 
 // Assets
 import Flyer from "../../../public/Flyer.png";
 import Fundo from "../../../public/Background Cardapio.png";
 import Banner from "../../../public/Banner Cardapio.png";
 
-export default function Cardapio(){
+export default function Cardapio() {
+    // PAGE
+    const [ categories, setCategories ] = React.useState<Category[]>([]);
+    const [ activeCategory, setActiveCategory ] = React.useState<string>("all");
+    const [ search, setSearch ] = React.useState("");
+    const [ loadingCategories, setLoadingCategories ] = React.useState(true);
+    const [ categoriesError, setCategoriesError ] = React.useState(false);
 
-    const [activeCategory, setActiveCategory] = React.useState<string>("1");
-    const [search, setSearch] = React.useState<string>("");
-    
+    React.useEffect(() => {
+        async function loadCategories(){
+            try {
+                setLoadingCategories(true);
+                setCategoriesError(false);
+
+                const data = await getAllCategories();
+
+                if(data){
+                    setCategories(data);
+                }
+            } catch (error) {
+                console.error("Erro ao carregar categorias:", error);
+                setCategoriesError(true);
+            } finally {
+                setLoadingCategories(false);
+            }
+        }
+
+        loadCategories();
+    }, []);
+
     const selectedCategory = categories.find(
-        (category) => category.id === activeCategory
+        (category) => String(category.id) === activeCategory
     );
 
     function changeStatus(id: string){
         setActiveCategory(id);
     }
-
 
     return(
         <>
@@ -102,46 +129,30 @@ export default function Cardapio(){
                             <div className="border border-[#353535] rounded-xl">
                                 <ul className="w-full divide-y divide-[#505050] flex flex-col rounded-xl">
                                     <OptionCategory
-                                     id="1"
-                                     nameCategory="Todos os produtos"
-                                     menuActive={activeCategory === "1"}
-                                     onActive={() => changeStatus("1")}
+                                        id="all"
+                                        nameCategory="Todos os produtos"
+                                        menuActive={activeCategory === "all"}
+                                        onActive={() => changeStatus("all")}
                                     />
 
-                                    <OptionCategory
-                                     id="2"
-                                     nameCategory="Caldos"
-                                     menuActive={activeCategory === "2"}
-                                     onActive={() => changeStatus("2")}
-                                    />
+                                    {loadingCategories && (
+                                        <li className="p-4 text-sm text-gray-500 font-google">Carregando categorias...</li>
+                                    )}
 
-                                    <OptionCategory
-                                     id="3"
-                                     nameCategory="Marmitas"
-                                     menuActive={activeCategory === "3"}
-                                     onActive={() => changeStatus("3")}
-                                    />
+                                    {categoriesError && (
+                                        <li className="p-4 text-sm text-red-500 font-google">Não foi possível carregar as categorias.</li>
+                                    )}
 
-                                    <OptionCategory
-                                     id="4"
-                                     nameCategory="Sobremesas"
-                                     menuActive={activeCategory === "4"}
-                                     onActive={() => changeStatus("4")}
-                                    />
-
-                                    <OptionCategory
-                                     id="5"
-                                     nameCategory="Bebidas"
-                                     menuActive={activeCategory === "5"}
-                                     onActive={() => changeStatus("5")}
-                                    />
-
-                                    <OptionCategory
-                                     id="6"
-                                     nameCategory="Promoções"
-                                     menuActive={activeCategory === "6"}
-                                     onActive={() => changeStatus("6")}
-                                    />
+                                    {!loadingCategories && !categoriesError &&
+                                        categories.map((category) => (
+                                        <OptionCategory
+                                            key={category.id}
+                                            id={String(category.id)}
+                                            nameCategory={category.name}
+                                            menuActive={activeCategory === String(category.id)}
+                                            onActive={() => changeStatus(String(category.id))}
+                                        />
+                                    ))}
                                 </ul>
                             </div>
 

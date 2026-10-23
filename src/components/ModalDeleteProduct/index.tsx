@@ -1,59 +1,116 @@
 "use client";
 import Image from "next/image";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 // Components
 import { Button, ButtonCancel } from "@/components/Button";
 
-// Data
-import { Product } from "@/types/Products";
+// Functions
+import { handleProductDelete } from "@/function/handleProductDelete";
+import { clearAdminDataCache } from "@/lib/cache/adminCache";
 
-type ModalEditProductProps = {
+// Types
+import type { Product } from "@/types/Products";
+
+type ModalDeleteProductProps = {
   product: Product;
-  onClose: ()=> void;
-  onDelete: ()=> void;
+  onClose: () => void;
+  onDelete: (productId: Product["id"]) => void;
 };
 
-export function ModalDeleteProduct({ product, onClose, onDelete }: ModalEditProductProps){
+export function ModalDeleteProduct({ product, onClose, onDelete }: ModalDeleteProductProps){
+  const [deleting, setDeleting] = useState(false);
+
+  
+  async function handleDelete(){
+    if (deleting) return;
+
+    setDeleting(true);
+
+    try {
+      await handleProductDelete(product.id);
+
+      clearAdminDataCache();
+
+      // Atualiza a lista no componente pai
+      onDelete(product.id);
+
+      toast.dismiss();
+      toast.success("Produto deletado com sucesso.", {
+        toastId: `delete-product-${product.id}`,
+      });
+
+      onClose();
+    } catch (error) {
+      console.error("Erro ao deletar produto:", error);
+
+      toast.error("Não foi possível deletar o produto. Tente novamente.", {
+        toastId: `delete-product-error-${product.id}`,
+      });
+    } finally {
+      setDeleting(false);
+    }
+  }
+
 
   return (
     <section
       className="fixed inset-0 z-50 flex items-center justify-center
       overflow-y-auto bg-black/90 p-4"
-      onMouseDown={(event)=> {
-        if (event.target === event.currentTarget) onClose();
+      onMouseDown={(event) => {
+        if (
+          event.target === event.currentTarget &&
+          !deleting
+        ) {
+          onClose();
+        }
       }}
     >
       <div
         role="dialog"
         aria-modal="true"
-        aria-labelledby="edit-product-title"
+        aria-labelledby="delete-product-title"
         className="my-auto h-max max-h-[95vh] w-full max-w-lg
         overflow-y-auto rounded-xl border border-[#747474]
         bg-[#0C0C0C] p-5"
       >
-        <h1 id="edit-product-title" className="font-google text-xl font-medium">
+        <h1
+          id="delete-product-title"
+          className="font-google text-xl font-medium"
+        >
           Deseja deletar esse produto?
         </h1>
 
-        <div className="flex flex-col items-center gap-3 my-16">
-          <Image 
-            className="h-12 w-12 object-cover border border-[#747474] rounded-md"
-            width={1000}
-            height={1000}
-            src={product.image}
+        <div className="my-16 flex flex-col items-center gap-3">
+          <Image
+            className="h-12 w-12 rounded-md border border-[#747474] object-cover"
+            width={100}
+            height={100}
+            src={product.photo}
             alt={product.name}
+            unoptimized
           />
 
-          <div className="min-w-0 w-full flex flex-col items-center gap-1">
-            <h1 className="truncate font-google font-medium text-2xl">
+          <div className="flex w-full min-w-0 flex-col items-center gap-1">
+            <h2 className="truncate font-google text-2xl font-medium">
               {product.name}
-            </h1>
-            <span className="truncate w-11/12 font-google text-base text-[#929292] text-center">{product.description}</span>
-            <span className="truncate font-google text-base text-[#929292]">Valor: {Number(product.price).toLocaleString("pt-br", {currency: "BRL", style:"currency"})}</span>
+            </h2>
+
+            <span className="w-11/12 truncate text-center font-google text-base text-[#929292]">
+              {product.description}
+            </span>
+
+            <span className="truncate font-google text-base text-[#929292]">
+              Valor:{" "}
+              {Number(product.price).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </span>
           </div>
         </div>
 
-        {/* Botões */}
         <div className="mt-6 flex gap-2">
           <ButtonCancel
             onClick={onClose}
@@ -61,8 +118,9 @@ export function ModalDeleteProduct({ product, onClose, onDelete }: ModalEditProd
           />
 
           <Button
-            onClick={onDelete}
-            text="Deletar Produto"
+            onClick={handleDelete}
+            text={deleting ? "Deletando..." : "Deletar Produto"}
+            disabled={deleting}
           />
         </div>
       </div>

@@ -15,13 +15,16 @@ import { Footer } from "@/components/Footer";
 // Functions
 import { getAllProducts } from '@/function/getAllProducts';
 import { getAllCategories } from '@/function/getAllCategory';
+import { handleCategoryInServer } from '@/function/handleCategoryInServer';
 
-// Data
-import { categories, Category } from "@/types/Categories";
-import { Product, products } from "@/types/Products";
+// Lib
+import { clearAdminDataCache } from "@/lib/cache/adminCache";
+
+// Types
+import { Category } from "@/types/Categories";
+import { Product } from "@/types/Products";
 
 export default function AdminCategoria(){
-
     // PAGE
     const [ categoriesPage, setCategoriesPage ] = React.useState<Category[]>([]);
     const [ productsPage, setProductsPage ] = React.useState<Product[]>([]);
@@ -36,65 +39,83 @@ export default function AdminCategoria(){
     const [ showModalDeleteCategory, setShowModalDeleteCategory ] = React.useState<boolean>(false);
     const [ categoryEditSelected, setCategoryEditSelected ] = React.useState<Category | null>(null);
     const [ categoryDeleteSelected, setCategoryDeleteSelected ] = React.useState<Category | null>(null);
-
+    
     React.useEffect(()=> {
-        function getCategories(){
-            setCategoriesPage(categories);
-        }
-        
-        function getProducts(){
-            setProductsPage(products);
+        let cancelled = false;
+
+        async function loadAdminData() {
+            const [products, categories] = await Promise.all([
+                getAllProducts(),
+                getAllCategories(),
+            ]);
+
+            if (cancelled) return;
+
+            if (products !== null) {
+                setProductsPage(products);
+            }
+
+            if (categories !== null) {
+                setCategoriesPage(categories);
+            }
         }
 
-        getCategories();
-        getProducts();
+        void loadAdminData();
+
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
-    React.useEffect(()=> { 
-        async function getItemsInLocal(){
-            await getAllProducts();
-            await getAllCategories();
-        }
-
-        getItemsInLocal();
-    }, []);    
-
-    function handleSubmitNewCategory(){
+    async function handleSubmitNewCategory(){
         const name = nameForm.trim();
         const color = colorForm.toUpperCase();
 
-        // Validar o nome
         if(!name){
             toast.warning("Informe o nome da categoria.");
             return;
         }
 
-        // Validar a cor hexadecimal
         if(!/^#[0-9A-Fa-f]{6}$/.test(color)){
             toast.warning("Selecione uma cor válida.");
             return;
         }
 
-        const categoryExists = categoriesPage.some((category)=> category.name.toLowerCase() === name.toLowerCase());
+        const categoryExists = categoriesPage.some(
+            (category) => category.name.toLowerCase() === name.toLowerCase()
+        );
 
         if(categoryExists){
             toast.warning("Já existe uma categoria com esse nome.");
             return;
         }
 
-        const newCategory: Category = {
-            id: crypto.randomUUID(),
-            name,
-            color,
-        };
+        try{
+            const newCategory = await handleCategoryInServer({ name, color });
 
-        setCategoriesPage((previous)=> [
-            ...previous,
-            newCategory,
-        ]);
+            if(!newCategory){
+                toast.error("Não foi possível cadastrar a categoria.");
+                return;
+            }
 
-        setNameForm("");
-        setColorForm("");
+            // Atualiza os cards usando o registro retornado pelo Supabase.
+            setCategoriesPage((previous)=> [
+                ...previous,
+                newCategory,
+            ]);
+
+            // Invalida o cache para que outras páginas busquem os dados atualizados.
+            clearAdminDataCache();
+
+            setNameForm("");
+            setColorForm("");
+
+            toast.success("Categoria cadastrada com sucesso.");
+        } 
+        catch(error){
+            console.error("Erro ao cadastrar categoria:", error);
+            toast.error("Erro ao cadastrar categoria.");
+        }
     }
 
     function handleDeleteCategory(categoria: Category){
@@ -105,7 +126,6 @@ export default function AdminCategoria(){
 
         setShowModalDeleteCategory(true);
     }
-
 
     return(
         <main className="relative min-h-screen overflow-hidden">
@@ -125,7 +145,7 @@ export default function AdminCategoria(){
                 <div className="w-full flex mt-4 gap-6 mb-16">
                     <div className="max-w-8/12 w-full h-150 bg-[#0C0C0C] border border-[#747474] rounded-xl p-5">
                         <div className="w-full grid grid-cols-2 gap-4">
-                            {categoriesPage.slice(1).map((category)=> (
+                            {categoriesPage.map((category)=> (
                                 <CardCategoryAdmin
                                  key={category.id}
                                  name={category.name}
@@ -243,7 +263,6 @@ export default function AdminCategoria(){
 
                     setShowModalEditCategory(false);
                     setCategoryEditSelected(null);
-                    toast.success("Categoria editada com sucesso.");
                 }}
                 />
             )}
@@ -261,7 +280,6 @@ export default function AdminCategoria(){
                  onDelete={()=> {
                   handleDeleteCategory(categoryDeleteSelected);
                   setShowModalDeleteCategory(false);
-                  toast.success("Categoria deletada com sucesso.");
                  }}
                 />
             )}

@@ -33,7 +33,7 @@ export function ProductTable({ product, onEdit, onDelete, onToggleStatus }: Prod
         <Image
           width={1000}
           height={1000}
-          src={product.image}
+          src={product.photo}
           alt={product.name}
           className="h-10 w-12 rounded-md border border-[#383838] object-cover"
         />
