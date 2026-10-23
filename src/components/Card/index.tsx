@@ -10,7 +10,7 @@ import { Button } from "../Button";
 import { cartContext } from '@/context/Cart/useCart';
 
 // Type
-import type { Product } from "@/data/Products";
+import type { Product } from "@/types/Products";
 
 type CardProps = {
   product: Product;

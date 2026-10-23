@@ -32,17 +32,17 @@ export default function LoginForm(){
   // LOADING
   const [isLoading, setIsLoading] = useState(false);
 
+  
   async function handleLogin(email: string, password: string){
     setIsLoading(true);
 
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    try{
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-      if(error || !data.user){
-        toast.error("Usuário ou senha inválidos!");
+      if (error || !data.user) {
+        toast.error("Usuário ou senha inválidos!", {
+          toastId: "login-invalid-credentials",
+        });
         return;
       }
 
@@ -58,26 +58,28 @@ export default function LoginForm(){
       // Recupera a rota original solicitada pelo usuário.
       const next = searchParams.get("next");
 
+      // Evita redirecionamentos para destinos externos.
       const destination =
         next?.startsWith("/") && !next.startsWith("//")
-          ? next
-          : "/admin/home";
+        ? next
+        : "/admin/home";
 
-      console.log("[LOGIN] Autenticação concluída");
-      console.log("[LOGIN] Parâmetro next:", next);
-      console.log("[LOGIN] Destino:", destination);
+      toast.success("Login efetuado!", {
+        toastId: "login-success",
+      });
 
-      toast.success("Login efetuado!");
+      // Navega para o destino após a autenticação.
       router.replace(destination);
-      router.refresh();
-
-    } catch (error) {
+    } catch (error){
       console.error("Erro ao realizar login:", error);
-      toast.error("Erro ao conectar com o servidor.");
+      toast.error("Erro ao conectar com o servidor.", {
+        toastId: "login-connection-error",
+      });
     } finally {
       setIsLoading(false);
     }
   }
+
 
   function handleSubmit(){
     if (!email.trim() || !password) {
@@ -139,7 +141,6 @@ export default function LoginForm(){
 
           <div className="mt-4">
             <Button
-              onClick={handleSubmit}
               text={isLoading ? "Entrando..." : "Entrar"}
             />
           </div>

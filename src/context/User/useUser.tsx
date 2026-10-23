@@ -17,7 +17,7 @@ const userContext = createContext<UserContextProps | undefined>(undefined);
 export function UserProvider({children}: {children: React.ReactNode}){
     const [user, setUser] = useState<UserProps | null>(null);
 
-    function handleUserInContext(user: UserProps | null) {
+    function handleUserInContext(user: UserProps | null){
         setUser(user);
     }
 

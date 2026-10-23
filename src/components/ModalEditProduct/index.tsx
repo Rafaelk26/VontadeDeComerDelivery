@@ -9,8 +9,8 @@ import { Input } from "@/components/Input";
 import { Button, ButtonCancel } from "@/components/Button";
 
 // Data
-import { Category } from "@/data/Categories";
-import { Product } from "@/data/Products";
+import { Category } from "@/types/Categories";
+import { Product } from "@/types/Products";
 
 // Assets
 import examplePNG from "../../../public/Caldo.png";

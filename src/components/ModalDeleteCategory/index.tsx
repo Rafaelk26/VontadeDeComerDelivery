@@ -5,7 +5,7 @@ import { IoIosAlert } from "react-icons/io";
 import { Button, ButtonCancel } from "@/components/Button";
 
 // Data
-import { Category } from "@/data/Categories";
+import { Category } from "@/types/Categories";
 
 type ModalDeleteCategoryProps = {
   category: Category;

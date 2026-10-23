@@ -20,8 +20,8 @@ import { ModalDeleteProduct } from "@/components/ModalDeleteProduct";
 import { Footer } from "@/components/Footer";
 
 // Data
-import { categories, Category } from "@/data/Categories";
-import { products, Product } from "@/data/Products";
+import { categories, Category } from "@/types/Categories";
+import { products, Product } from "@/types/Products";
 
 export default function AdminHome(){
     // PAGE

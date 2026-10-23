@@ -3,7 +3,7 @@ import React from "react";
 import { IoFastFood } from "react-icons/io5";
 
 // Data
-import { products } from "@/data/Products";
+import { products } from "@/types/Products";
 
 // Components
 import { Card } from "../Card";

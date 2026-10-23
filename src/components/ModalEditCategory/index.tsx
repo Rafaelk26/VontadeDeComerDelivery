@@ -6,7 +6,7 @@ import { Input } from "@/components/Input";
 import { Button, ButtonCancel } from "@/components/Button";
 
 // Data
-import { Category } from "@/data/Categories";
+import { Category } from "@/types/Categories";
 
 type ModalEditCategoryProps = {
   category: Category;

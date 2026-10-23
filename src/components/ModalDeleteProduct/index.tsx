@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button, ButtonCancel } from "@/components/Button";
 
 // Data
-import { Product } from "@/data/Products";
+import { Product } from "@/types/Products";
 
 type ModalEditProductProps = {
   product: Product;

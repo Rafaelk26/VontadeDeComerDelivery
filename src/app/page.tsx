@@ -11,7 +11,7 @@ import { Card } from "@/components/Card";
 import { Footer } from "@/components/Footer";
 
 // Data
-import { products } from '@/data/Products'
+import { products } from '@/types/Products'
 
 // Assets
 import Fundo from "../../public/Background Home.png";

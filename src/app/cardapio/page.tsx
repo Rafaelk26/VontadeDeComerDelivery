@@ -12,7 +12,7 @@ import { OptionCategory } from "@/components/OptionCategory";
 import { Footer } from "@/components/Footer";
 
 // Data
-import { categories } from "@/data/Categories";
+import { categories } from "@/types/Categories";
 
 // Assets
 import Flyer from "../../../public/Flyer.png";

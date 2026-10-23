@@ -5,7 +5,7 @@ import { FiEdit2 } from "react-icons/fi";
 import { MdDeleteOutline } from "react-icons/md";
 
 // Data
-import { Product } from "@/data/Products";
+import { Product } from "@/types/Products";
 
 type ProductTableProps = {
   product: Product;

@@ -17,8 +17,8 @@ import { getAllProducts } from '@/function/getAllProducts';
 import { getAllCategories } from '@/function/getAllCategory';
 
 // Data
-import { categories, Category } from "@/data/Categories";
-import { Product, products } from "@/data/Products";
+import { categories, Category } from "@/types/Categories";
+import { Product, products } from "@/types/Products";
 
 export default function AdminCategoria(){
 
