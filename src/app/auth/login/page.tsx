@@ -1,7 +1,6 @@
 "use client";
-
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { toast } from "react-toastify";
 
@@ -17,27 +16,25 @@ import { Button } from "@/components/Button";
 import bgLogin from "../../../../public/Caldo.png";
 import logoOficial from "../../../../public/Logo.png";
 
-
-export default function LoginForm(){
-
-  // SERVER
+export default function LoginForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { handleUserInContext } = useUser();
 
-  // FORMS
+  // Formulário
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // LOADING
+  // Carregamento
   const [isLoading, setIsLoading] = useState(false);
 
-  
-  async function handleLogin(email: string, password: string){
+  async function handleLogin(email: string, password: string) {
     setIsLoading(true);
 
-    try{
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
       if (error || !data.user) {
         toast.error("Usuário ou senha inválidos!", {
@@ -55,23 +52,15 @@ export default function LoginForm(){
         email: data.user.email ?? "",
       });
 
-      // Recupera a rota original solicitada pelo usuário.
-      const next = searchParams.get("next");
-
-      // Evita redirecionamentos para destinos externos.
-      const destination =
-        next?.startsWith("/") && !next.startsWith("//")
-        ? next
-        : "/admin/home";
-
       toast.success("Login efetuado!", {
         toastId: "login-success",
       });
 
-      // Navega para o destino após a autenticação.
-      router.replace(destination);
-    } catch (error){
+      // Redireciona para o painel administrativo.
+      router.replace("/admin/home");
+    } catch (error) {
       console.error("Erro ao realizar login:", error);
+
       toast.error("Erro ao conectar com o servidor.", {
         toastId: "login-connection-error",
       });
@@ -80,8 +69,7 @@ export default function LoginForm(){
     }
   }
 
-
-  function handleSubmit(){
+  function handleSubmit() {
     if (!email.trim() || !password) {
       toast.error("Preencha seu e-mail e sua senha!");
       return;
@@ -121,28 +109,26 @@ export default function LoginForm(){
 
         <form
           className="mt-10 flex w-full flex-col gap-4"
-          onSubmit={(event)=> {
+          onSubmit={(event) => {
             event.preventDefault();
             handleSubmit();
           }}
         >
           <Input
-            onChange={(event)=> setEmail(event.target.value)}
+            onChange={(event) => setEmail(event.target.value)}
             value={email}
             name="Email"
             type="email"
           />
 
           <InputPassword
-            onChange={(event)=> setPassword(event.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
             value={password}
             name="Senha"
           />
 
           <div className="mt-4">
-            <Button
-              text={isLoading ? "Entrando..." : "Entrar"}
-            />
+            <Button text={isLoading ? "Entrando..." : "Entrar"} />
           </div>
         </form>
       </div>
