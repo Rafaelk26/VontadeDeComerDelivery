@@ -27,7 +27,7 @@ export default function LoginForm() {
   // Carregamento
   const [isLoading, setIsLoading] = useState(false);
 
-  async function handleLogin(email: string, password: string) {
+  async function handleLogin(email: string, password: string){
     setIsLoading(true);
 
     try {
@@ -69,7 +69,7 @@ export default function LoginForm() {
     }
   }
 
-  function handleSubmit() {
+  function handleSubmit(){
     if (!email.trim() || !password) {
       toast.error("Preencha seu e-mail e sua senha!");
       return;
@@ -78,7 +78,7 @@ export default function LoginForm() {
     void handleLogin(email.trim(), password);
   }
 
-  return (
+  return(
     <main className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden">
       <Image
         src={bgLogin}

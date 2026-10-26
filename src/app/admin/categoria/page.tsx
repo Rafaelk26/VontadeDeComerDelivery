@@ -144,23 +144,35 @@ export default function AdminCategoria(){
                 {/* CARDS */}
                 <div className="w-full flex mt-4 gap-6 mb-16">
                     <div className="max-w-8/12 w-full h-150 bg-[#0C0C0C] border border-[#747474] rounded-xl p-5">
-                        <div className="w-full grid grid-cols-2 gap-4">
-                            {categoriesPage.map((category)=> (
-                                <CardCategoryAdmin
-                                 key={category.id}
-                                 name={category.name}
-                                 color={category.color ? category.color : ""}
-                                 quantityItems={productsPage.filter((p)=> category.name === p.category).length}
-                                 onEdit={() => {
-                                  setCategoryEditSelected(category);
-                                  setShowModalEditCategory(true);
-                                 }}
-                                 onDelete={() => {
-                                  setCategoryDeleteSelected(category);
-                                  setShowModalDeleteCategory(true);
-                                 }}
-                                />
-                            ))}
+                        <div className={`w-full grid ${categoriesPage.length === 0 ? `grid-cols-1` : `grid-cols-2`} gap-4`}>
+                            {categoriesPage.length === 0 ? (
+                                <>
+                                    <div className="w-full flex justify-center items-center">
+                                        <span className="font-google text-xl text-zinc-600">
+                                            Nenhuma categoria encontrada.
+                                        </span>
+                                    </div>
+                                </>
+                            ):(
+                                <>
+                                    {categoriesPage.map((category)=> (
+                                        <CardCategoryAdmin
+                                         key={category.id}
+                                         name={category.name}
+                                         color={category.color ? category.color : ""}
+                                         quantityItems={productsPage.filter((p)=> category.name === p.category).length}
+                                         onEdit={()=>{
+                                            setCategoryEditSelected(category);
+                                            setShowModalEditCategory(true);
+                                         }}
+                                         onDelete={()=>{
+                                            setCategoryDeleteSelected(category);
+                                            setShowModalDeleteCategory(true);
+                                         }}
+                                        />
+                                    ))}
+                                </>
+                            )}
                         </div>
                     </div>
 

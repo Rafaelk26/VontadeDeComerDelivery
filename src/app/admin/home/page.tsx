@@ -196,7 +196,9 @@ export default function AdminHome(){
 
     return(
         <main className="relative min-h-screen overflow-hidden">
+            
             <HeaderAdmin />
+
             <Wrapper>
                 <section className="mt-30">
                     {/* PRESENTATIONS */}
@@ -208,18 +210,15 @@ export default function AdminHome(){
                         </div>
                     </div>
                     {/* CARDS */}
-                    <div className="grid grid-cols-4 gap-4 mt-8">
+                    <div className="grid grid-cols-2 gap-4 mt-8">
                         <div className="w-full border border-[#747474] px-4 py-8 bg-[#0C0C0C] rounded-lg">
                             <div className="flex gap-4 items-center justify-between">
                                 <div className="flex gap-4 items-center">
-                                    <BsBoxSeamFill size={32} color="#F97318" />
+                                    <BsBoxSeamFill size={40} color="#F97318" />
                                     <div className="flex flex-col">
-                                        <span className="font-google text-xs">Produtos registrados</span>
-                                        <h1 className="font-google text-2xl font-semibold">{yourProducts.length}</h1>
+                                        <span className="font-google text-base">Produtos registrados</span>
+                                        <h1 className="font-google text-3xl font-semibold">{yourProducts.length}</h1>
                                     </div>
-                                </div>
-                                <div className="w-max">
-                                    <span className="font-google text-green-400">+ 2 novos</span>
                                 </div>
                             </div>
                         </div>
@@ -227,19 +226,16 @@ export default function AdminHome(){
                         <div className="w-full border border-[#747474] px-4 py-8 bg-[#0C0C0C] rounded-lg">
                             <div className="flex gap-4 items-center justify-between">
                                 <div className="flex gap-4 items-center">
-                                    <BiSolidCategoryAlt size={32} color="#F97318" />
+                                    <BiSolidCategoryAlt size={40} color="#F97318" />
                                     <div className="flex flex-col">
-                                        <span className="font-google text-xs">Categorias registradas</span>
-                                        <h1 className="font-google text-2xl font-semibold">{categoriesData.length}</h1>
+                                        <span className="font-google text-base">Categorias registradas</span>
+                                        <h1 className="font-google text-3xl font-semibold">{categoriesData.length}</h1>
                                     </div>
-                                </div>
-                                <div className="w-max">
-                                    <span className="font-google text-green-400">+ 2 novos</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="w-full border border-[#747474] px-4 py-8 bg-[#0C0C0C] rounded-lg">
+                        {/* <div className="w-full border border-[#747474] px-4 py-8 bg-[#0C0C0C] rounded-lg">
                             <div className="flex gap-4 items-center justify-between">
                                 <div className="flex gap-4 items-center">
                                     <RiMoneyDollarCircleFill size={32} color="#F97318" />
@@ -247,9 +243,6 @@ export default function AdminHome(){
                                         <span className="font-google text-xs">Faturamento</span>
                                         <h1 className="font-google text-2xl font-semibold">R$ 0,00</h1>
                                     </div>
-                                </div>
-                                <div className="w-max">
-                                    <span className="font-google text-green-400">+ 5%</span>
                                 </div>
                             </div>
                         </div>
@@ -264,7 +257,7 @@ export default function AdminHome(){
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </section>
 
@@ -318,7 +311,9 @@ export default function AdminHome(){
                                         />
                                         ))
                                     ):(
-                                        <p className="py-8 text-center text-base text-gray-400 font-google">Nenhum produto encontrado.</p>
+                                        <p className="py-8 text-center text-base text-zinc-600 font-google">
+                                            Nenhum produto encontrado.
+                                        </p>
                                     )}
                                 </div>
                             </div>
