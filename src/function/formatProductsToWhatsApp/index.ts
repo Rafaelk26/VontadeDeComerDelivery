@@ -1,17 +1,27 @@
-// Type
-import type { itemCartProps } from "@/context/Cart/useCart";
-
-type ProductsToWhatsAppProps = {
-  cart: itemCartProps[];
-  description: string;
+// Types
+type WhatsAppOrder = {
+  order: {
+    codigo: string;
+    subtotal: number;
+    frete: number;
+    total: number;
+    forma_pagamento: string | null;
+    observacao: string | null;
+  };
+  items: {
+    nome_produto: string;
+    preco_unitario: number;
+    quantidade: number;
+    subtotal: number;
+  }[];
   itemsQuantity: number;
-  subtotal: number;
-  shipping: number;
-  total: number;
-  methodoPayment: string;
 };
 
-const formatCurrency = (value: number)=> value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const formatCurrency = (value: number) =>
+  Number(value).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
 
 const paymentMethods: Record<string, string> = {
   debito: "Cartão de débito",
@@ -20,65 +30,65 @@ const paymentMethods: Record<string, string> = {
   dinheiro: "Dinheiro",
 };
 
-export function formatProductsToWhatsApp({ cart, description, itemsQuantity, subtotal, shipping, methodoPayment, total }: ProductsToWhatsAppProps): string{
-  const productsMessage = cart.map((item, index)=> {
-      const quantity = Number(item.quantity);
-      const price = Number(item.price);
-
-      return [
-        `*${index + 1}. ${item.name}*`,
-        `   Quantidade: ${quantity}`,
-        `   Preço unitário: ${formatCurrency(price)}`,
-        item.description?.trim()
-          ? `   Descrição: ${item.description.trim()}`
-          : "",
-      ]
-        .filter(Boolean)
-        .join("\n");
-    })
+export function formatProductsToWhatsApp({ order, items, itemsQuantity }: WhatsAppOrder): string {
+  const productsMessage = items
+    .map((item, index) =>
+      [
+        `*${index + 1}. ${item.nome_produto}*`,
+        `   Quantidade: ${item.quantidade}`,
+        `   Preço unitário: ${formatCurrency(item.preco_unitario)}`,
+      ].join("\n")
+    )
     .join("\n\n");
 
-  const observation =
-    description.trim() &&
-    description.trim() !== "Nenhuma observação."
-      ? description.trim()
-      : "Nenhuma";
-
   const payment =
-    paymentMethods[methodoPayment] ?? methodoPayment;
+    paymentMethods[order.forma_pagamento ?? ""] ??
+    order.forma_pagamento ??
+    "Não selecionada";
 
   return [
-    "*🛒 NOVO PEDIDO — VONTADE DE COMER*",
+    "*VONTADE DE COMER | PEDIDO*",
+    "Solicitação de novo pedido",
     "",
     "----------------------------",
     "",
-    "*📦 ITENS DO PEDIDO*",
+    "*ITENS DO PEDIDO*",
     "",
     productsMessage,
     "",
     "----------------------------",
     "",
-    "*📝 OBSERVAÇÕES DO CLIENTE*",
-    observation,
+    "*RESUMO*",
+    "",
+    `Código do pedido: ${order.codigo}`,
+    "Valores registrados no sistema estão sujeitos à confirmação do estabelecimento.",
+    "",
+    `Quantidade de unidades: ${itemsQuantity}`,
+    `Subtotal dos produtos: ${formatCurrency(order.subtotal)}`,
+    `Frete: ${
+      Number(order.frete) === 0
+        ? "Grátis"
+        : formatCurrency(order.frete)
+    }`,
+    `*TOTAL REGISTRADO: ${formatCurrency(order.total)}*`,
     "",
     "----------------------------",
     "",
-    "*💳 FORMA DE PAGAMENTO*",
-    payment || "Não selecionada",
+    "*FORMA DE PAGAMENTO*",
+    payment,
     "",
     "----------------------------",
     "",
-    "*📃 RESUMO DO PEDIDO*",
+    "*OBSERVAÇÕES*",
+    order.observacao || "Nenhuma",
     "",
     "----------------------------",
     "",
-    `Quantidade de itens: ${itemsQuantity}`,
-    `Subtotal dos produtos: ${formatCurrency(subtotal)}`,
-    `Frete: ${shipping === 0 ? "Grátis" : formatCurrency(shipping)}`,
-    `*TOTAL: ${formatCurrency(total)}*`,
+    "*IMPORTANTE*",
+    "Esta mensagem é uma solicitação de pedido, não uma confirmação de compra.",
+    "Os produtos, preços, disponibilidade, frete e valor final serão conferidos pelo estabelecimento antes da confirmação.",
+    "Em caso de divergência, o estabelecimento informará os valores corretos e as condições aplicáveis antes de confirmar o pedido.",
     "",
-    "----------------------------",
-    "",
-    "Pedido enviado pelo site. Aguardo confirmação aqui no whatsapp!",
+    "Pedido enviado pelo site Vontade de Comer.",
   ].join("\n");
 }

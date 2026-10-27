@@ -16,6 +16,7 @@ import { CardItemCart } from "@/components/CardItemCart";
 import { Button } from "@/components/Button";
 
 // Function
+import { criarPedidoWhatsApp } from "@/function/createOrderToWhatsApp";
 import { formatProductsToWhatsApp } from "@/function/formatProductsToWhatsApp";
 
 // Context
@@ -52,7 +53,8 @@ export default function Carrinho(){
     const total = subtotal + freteCalc;
 
 
-    function sendOrderToWhatsApp(){
+    
+    async function sendOrderToWhatsApp(){
         if(cart.length === 0){
             toast.error("Adicione produtos ao carrinho antes de finalizar.");
             return;
@@ -63,16 +65,35 @@ export default function Carrinho(){
             return;
         }
 
-        const itemsQuantity = cart.reduce((acc, item) => acc + Number(item.quantity || 0), 0);
+        try{
+            const result = await criarPedidoWhatsApp({
+            cart: cart.map((item) => ({
+                id: item.id,
+                quantity: Number(item.quantity),
+            })),
+            description,
+            methodoPayment: methodPay,
+            });
 
-        const message = formatProductsToWhatsApp({ cart, description, itemsQuantity, subtotal, shipping: freteCalc, methodoPayment: methodPay, total });
+            const message = formatProductsToWhatsApp(result);
+            const companyWhatsApp = "5512981960559";
+            const whatsappUrl =
+            `https://wa.me/${companyWhatsApp}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+            toast.success(`Pedido ${result.order.codigo} registrado!`);
 
-        const companyWhatsApp = "5512981960559";
+        }
+        catch(error){
+            console.error("Erro ao finalizar pedido:", error);
 
-        const whatsappUrl = `https://wa.me/${companyWhatsApp}?text=${encodeURIComponent(message)}`;
-
-        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+            toast.error(
+            error instanceof Error
+                ? error.message
+                : "Não foi possível registrar o pedido."
+            );
+        }
     }
+
 
     if(!isLoaded){
         return <div>Carregando carrinho...</div>;

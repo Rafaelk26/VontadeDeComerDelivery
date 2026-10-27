@@ -5,6 +5,7 @@ import Image from "next/image";
 import { IoMdCart } from "react-icons/io";
 import { usePathname } from "next/navigation";
 import { MdSpaceDashboard, MdOutlineRestaurantMenu} from "react-icons/md";
+import { IoNewspaper } from "react-icons/io5";
 import { FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 
 // Function
@@ -163,6 +164,29 @@ export function HeaderAdmin(){
                   }
                 />
                 Categorias
+              </Link>
+            </li>
+
+
+            {/* PEDIDOS */}
+            <li>
+              <Link
+                href="/admin/pedidos"
+                className={`group flex items-center gap-2 font-google transition-all hover:cursor-pointer ${
+                  pathname === "/admin/pedidos"
+                  ? "text-[#F97318]"
+                  : "text-white hover:text-[#F97318]"
+                }`}
+              >
+                <IoNewspaper
+                  size={24}
+                  className={
+                    pathname === "/admin/pedidos"
+                    ? "text-[#F97318]"
+                    : "text-white group-hover:text-[#F97318]"
+                  }
+                />
+                Pedidos
               </Link>
             </li>
           </ul>
