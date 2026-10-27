@@ -2,12 +2,14 @@
 import React from "react";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { FaUserAlt, FaGoogle } from "react-icons/fa";
+import { FaUserAlt } from "react-icons/fa";
 import { BsBoxSeamFill } from "react-icons/bs";
-import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { BiSolidCategoryAlt } from "react-icons/bi";
 import { LiaCloudUploadAltSolid } from "react-icons/lia";
 import { MdDeleteOutline } from "react-icons/md";
+
+// Database
+import { supabase } from "@/server/supabase/supabase";
 
 // Components
 import { Wrapper } from "@/components/Wrapper";
@@ -29,7 +31,6 @@ import { clearAdminDataCache } from "@/lib/cache/adminCache";
 // Types
 import type { Category } from "@/types/Categories";
 import type { Product } from "@/types/Products";
-import { supabase } from "@/server/supabase/supabase";
 
 export default function AdminHome(){
     // PAGE
@@ -53,7 +54,7 @@ export default function AdminHome(){
     const [ imageForm, setImageForm ] = React.useState<string>("");
     const [ statusForm, setStatusForm ] = React.useState<boolean>(false);
 
-    React.useEffect(() => {
+    React.useEffect(()=> {
         let cancelled = false;
 
         async function loadAdminData() {
@@ -122,7 +123,7 @@ export default function AdminHome(){
         setImageForm(previewUrl);
     }
 
-    async function handleSubmitNewProduct() {
+    async function handleSubmitNewProduct(){
         const name = nameForm.trim();
         const description = descriptionForm.trim();
         const category = categoryForm.trim();

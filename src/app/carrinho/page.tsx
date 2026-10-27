@@ -15,11 +15,15 @@ import { Footer } from "@/components/Footer";
 import { CardItemCart } from "@/components/CardItemCart";
 import { Button } from "@/components/Button";
 
+// Function
+import { formatProductsToWhatsApp } from "@/function/formatProductsToWhatsApp";
+
 // Context
 import { cartContext } from "@/context/Cart/useCart";
 
 // Assets
 import Fundo from "../../../public/Background Carrinho.png";
+import { toast } from "react-toastify";
 
 export default function Carrinho(){
 
@@ -49,11 +53,25 @@ export default function Carrinho(){
 
 
     function sendOrderToWhatsApp(){
-        console.log("ENVIANDO ITEMS NO CARRINHO", cart);
-        console.log("Descrição:", description);
-        console.log("Items no carrinho:", cart.length);
-        console.log("Total do pedido:", total);
-        console.log("Método de pagamento:", methodPay);
+        if(cart.length === 0){
+            toast.error("Adicione produtos ao carrinho antes de finalizar.");
+            return;
+        }
+
+        if(!methodPay){
+            toast.warning("Selecione uma forma de pagamento.");
+            return;
+        }
+
+        const itemsQuantity = cart.reduce((acc, item) => acc + Number(item.quantity || 0), 0);
+
+        const message = formatProductsToWhatsApp({ cart, description, itemsQuantity, subtotal, shipping: freteCalc, methodoPayment: methodPay, total });
+
+        const companyWhatsApp = "5512981960559";
+
+        const whatsappUrl = `https://wa.me/${companyWhatsApp}?text=${encodeURIComponent(message)}`;
+
+        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
     }
 
     if(!isLoaded){
