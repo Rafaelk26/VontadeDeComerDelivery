@@ -57,7 +57,7 @@ export function CardItemCart({ removeItemCart, id, name, description, price, cat
         <div className="min-w-0 flex flex-1 flex-col justify-between">
 
           <div>
-            <h1 className="font-google font-bold text-base leading-tight break-words sm:text-xl md:text-3xl md:leading-7">
+            <h1 className="font-google font-bold text-base leading-tight wrap-break-word sm:text-xl md:text-3xl md:leading-7">
               {name}
             </h1>
 
