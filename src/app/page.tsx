@@ -49,7 +49,9 @@ export default function Home() {
 
   return (
     <>
+  
       <main className="relative min-h-screen overflow-hidden">
+
         {/* BACKGROUND */}
         <Image
           src={Fundo}
@@ -57,56 +59,69 @@ export default function Home() {
           fill
           priority
           quality={100}
-          className="absolute -z-20 object-fill"
+          className="absolute -z-20 object-cover md:object-fill"
         />
 
         <Header />
 
         <Wrapper>
-          <section className="relative flex min-h-[calc(120vh)] items-center">
-            {/* CONTEÚDO */}
-            <div className="relative z-10 w-full max-w-162.5 pb-10 ps-10">
-              <h4 className="font-google text-md italic text-white">
-                Sabor &amp; Qualidade
-              </h4>
-
-              <div className="mt-3 flex flex-col">
-                <h1 className="font-google text-5xl font-regular leading-[0.95] text-white md:text-7xl">
-                  No conforto
-                </h1>
-
-                <h1 className="font-google text-5xl font-medium leading-[0.95] text-[#F97318] md:text-7xl">
-                  De sua casa
-                </h1>
-              </div>
-
-              <span className="mt-5 block font-google text-base font-light leading-tight text-white md:text-xl">
-                Caldos, bebidas, marmitas, e muito mais.
-                <br />
-                Tudo feito com carinho especial para você!
-              </span>
-
-              {/* BOTÃO */}
-              <div className="mt-8">
-                <Button text="Ver cardápio" linkPath="/cardapio" />
-              </div>
-            </div>
-
+          <section className="relative flex min-h-[calc(100svh-0px)] flex-col items-center justify-center py-12 
+          md:min-h-[120vh] md:flex-row md:items-center md:justify-start md:py-0">
             {/* FLYER */}
-            <div className="absolute bottom-[15%] right-[5%] z-20 md:right-[8%] lg:right-[4%]">
+            <div className="relative z-20 w-52 
+            sm:w-60 md:absolute md:bottom-[30%] md:right-[8%] md:mt-0 md:w-64 lg:right-[4%]">
               <Link href="/cardapio">
                 <Image
                   src={Flyer}
                   alt="Flyer Vontade de Comer"
                   priority
                   quality={100}
-                  className="w-64 object-contain rotate-[-14deg] transition-transform duration-300 hover:cursor-pointer hover:scale-105 hover:drop-shadow-[0_10px_25px_rgba(253,252,252,0.6)]"
+                  className="w-full rotate-[-8deg] object-contain transition-transform duration-300 hover:cursor-pointer hover:scale-105 hover:drop-shadow-[0_10px_25px_rgba(253,252,252,0.6)] md:rotate-[-14deg]"
                 />
               </Link>
+            </div>
+
+            {/* CONTEÚDO */}
+            <div className="relative z-10 mt-8 w-full max-w-162.5 px-5 text-center 
+            md:pb-10 md:ps-10 md:pe-0 md:text-left">
+              <h4 className="font-google text-lg italic text-white 
+              sm:text-base md:text-md">
+                Sabor &amp; Qualidade
+              </h4>
+
+              <div className="mt-3 flex flex-col">
+
+                <h1 className="font-google text-5xl font-regular leading-[0.95] text-white 
+                sm:text-5xl md:text-7xl">
+                  No conforto
+                </h1>
+
+                <h1 className="font-google text-6xl font-medium leading-[0.95] text-[#F97318] 
+                sm:text-5xl md:text-7xl">
+                  De sua casa
+                </h1>
+
+              </div>
+
+              <span className="mx-auto mt-5 block max-w-md font-google text-lg font-light leading-relaxed text-white 
+              sm:text-base md:mx-0 md:text-xl">
+
+                Caldos, bebidas, marmitas, e muito mais.
+                <br />
+                Tudo feito com carinho especial para você!
+
+              </span>
+
+              {/* BOTÃO */}
+              <div className="mt-7 flex justify-center 
+              md:mt-8 md:justify-start">
+                <Button text="Ver cardápio" linkPath="/cardapio" />
+              </div>
             </div>
           </section>
         </Wrapper>
       </main>
+
 
       {/* TRACK */}
       <main className="w-full overflow-hidden border-t border-b border-[#505050] py-6">
@@ -121,28 +136,33 @@ export default function Home() {
         </div>
       </main>
 
+
       {/* CARDÁPIO */}
-      <main className="mt-16">
+      <main className="mt-24 md:mt-20">
         <Wrapper>
-          <h4 className="font-google text-md italic text-[#F97318] ps-10">
-            Nossos produtos
-          </h4>
+          {/* TÍTULOS */}
+          <div className="px-4 md:px-0">
+            <h4 className="font-google text-center text-sm italic text-[#F97318] md:text-start md:text-md">
+              Nossos produtos
+            </h4>
 
-          <h1 className="font-google text-3xl font-regular leading-[0.95] text-white ps-10 md:text-3xl">
-            O melhor do nosso cardápio
-          </h1>
+            <h1 className="mx-auto mt-2 max-w-60 font-google text-center text-3xl font-regular leading-tight text-white sm:max-w-md md:mx-0 md:max-w-none md:text-start md:text-3xl md:leading-[0.95]">
+              O melhor do nosso cardápio
+            </h1>
 
-          <div className="w-48 border border-[#F97318] mt-3 ms-10" />
+            <div className="mx-auto mt-3 w-32 border border-[#F97318] sm:w-48 md:mx-0" />
+          </div>
 
-          <section className="px-10 grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
+          {/* PRODUTOS */}
+          <section className="mt-10 grid grid-cols-2 gap-3 px-3 sm:mt-12 sm:gap-5 md:mt-16 md:grid-cols-4 md:gap-6">
             {loadingProducts && (
-              <p className="col-span-full text-center text-gray-400 font-google">
+              <p className="col-span-full py-10 text-center font-google text-gray-400">
                 Carregando produtos...
               </p>
             )}
 
             {!loadingProducts && productsError && (
-              <p className="col-span-full text-center text-red-400 font-google">
+              <p className="col-span-full py-10 text-center font-google text-red-400">
                 Não foi possível carregar os produtos. Tente novamente mais tarde.
               </p>
             )}
@@ -150,27 +170,34 @@ export default function Home() {
             {!loadingProducts &&
               !productsError &&
               products.length === 0 && (
-                <p className="col-span-full text-center text-gray-400 font-google">
+                <p className="col-span-full py-10 text-center font-google text-gray-400">
                   Nenhum produto disponível no momento.
                 </p>
               )}
 
-            {!loadingProducts && !productsError &&
+            {!loadingProducts &&
+              !productsError &&
               products
-              .filter((product) => product.status === true)
-              .slice(0, 8)
-              .map((product) => (
-                <Card key={product.id} product={product} />
-              ))}
+                .filter((product) => product.status === true)
+                .slice(0, 8)
+                .map((product) => (
+                  <Card key={product.id} product={product} />
+                ))}
           </section>
 
-          <div className="mt-10 flex justify-center">
-            <Button linkPath="/cardapio" text="Ver mais opções" />
+          {/* BOTÃO */}
+          <div className="mt-8 flex justify-center px-4 
+          sm:mt-10">
+            <Button
+              linkPath="/cardapio"
+              text="Ver mais opções"
+            />
           </div>
         </Wrapper>
       </main>
 
-      <main className="w-full mt-14">
+
+      <main className="w-full mt-20 md:mt-24">
         <Footer />
       </main>
     </>

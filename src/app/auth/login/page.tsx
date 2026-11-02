@@ -27,7 +27,7 @@ export default function LoginForm() {
   // Carregamento
   const [isLoading, setIsLoading] = useState(false);
 
-  async function handleLogin(email: string, password: string){
+  async function handleLogin(email: string, password: string) {
     setIsLoading(true);
 
     try {
@@ -69,7 +69,7 @@ export default function LoginForm() {
     }
   }
 
-  function handleSubmit(){
+  function handleSubmit() {
     if (!email.trim() || !password) {
       toast.error("Preencha seu e-mail e sua senha!");
       return;
@@ -78,8 +78,8 @@ export default function LoginForm() {
     void handleLogin(email.trim(), password);
   }
 
-  return(
-    <main className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden">
+  return (
+    <main className="relative flex h-screen min-h-svh w-full flex-col items-center justify-center overflow-hidden px-4 sm:px-6">
       <Image
         src={bgLogin}
         alt="Plano de fundo"
@@ -89,26 +89,26 @@ export default function LoginForm() {
         className="absolute -z-20 h-screen w-full object-cover opacity-20 blur-xl"
       />
 
-      <div className="flex w-full max-w-96 flex-col items-center rounded-2xl border-[.5px] border-[#F97318]/80 px-6 py-8">
+      <div className="flex w-full max-w-96 flex-col items-center rounded-2xl border-[.5px] border-[#F97318]/80 px-5 py-7 sm:px-6 sm:py-8">
         <Image
           src={logoOficial}
           alt="Logo oficial"
           width={1000}
           height={1000}
           priority
-          className="h-24 w-24 object-contain"
+          className="h-20 w-20 object-contain sm:h-24 sm:w-24"
         />
 
-        <h1 className="mt-4 font-google text-4xl font-medium text-white">
+        <h1 className="mt-4 font-google text-3xl font-medium text-white sm:text-4xl">
           Login
         </h1>
 
-        <span className="mt-4 w-48 text-center font-google text-base font-light text-white">
+        <span className="mt-4 w-full max-w-48 text-center font-google text-base font-light text-white">
           Faça o login para administrar seu negócio.
         </span>
 
         <form
-          className="mt-10 flex w-full flex-col gap-4"
+          className="mt-8 flex w-full flex-col gap-4 sm:mt-10"
           onSubmit={(event) => {
             event.preventDefault();
             handleSubmit();

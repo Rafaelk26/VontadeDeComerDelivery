@@ -1,93 +1,140 @@
+
 "use client";
+
 import React from "react";
 import Image from "next/image";
 import { FaRegTrashAlt } from "react-icons/fa";
 
 // Types and Context
 import { cartContext, itemCartProps } from "@/context/Cart/useCart";
-interface removeItemCartProps extends itemCartProps{
-    removeItemCart: (id: string)=> void;
+
+interface removeItemCartProps extends itemCartProps {
+  removeItemCart: (id: string) => void;
 }
 
-export function CardItemCart({removeItemCart, id, name, description, price, category, quantity, photo, subtotal}: removeItemCartProps){
-        
-    const context = React.useContext(cartContext);
+export function CardItemCart({ removeItemCart, id, name, description, price, category, quantity, photo, subtotal}: removeItemCartProps){
+  const context = React.useContext(cartContext);
 
-        if(!context){
-            throw new Error("CardItemCart precisa estar dentro de CartProvider.");
-        }
+  if (!context) {
+    throw new Error("CardItemCart precisa estar dentro de CartProvider.");
+  }
 
-        const { updateQuantity } = context;
+  const { updateQuantity } = context;
 
-        function addList() {
-            updateQuantity(id, quantity + 1);
-        }
+  function addList() {
+    updateQuantity(id, quantity + 1);
+  }
 
-        function delList() {
-            if (quantity <= 1) {
-                removeItemCart(id);
-                return;
-            }
+  function delList() {
+    if (quantity <= 1) {
+      removeItemCart(id);
+      return;
+    }
 
-            updateQuantity(id, quantity - 1);
-        }
+    updateQuantity(id, quantity - 1);
+  }
 
+  return (
+    <div
+      key={id}
+      className="w-full flex flex-col gap-3 pb-4 sm:gap-4 md:flex-row md:justify-between md:gap-0 md:first:pb-4 md:last:pb-0"
+    >
+      {/* INFORMAÇÕES DO PRODUTO */}
+      <div className="w-full min-w-0 flex gap-3 sm:gap-4 md:max-w-10/12 md:items-center">
 
-    return(
-        <>
-            <div
-            key={id}
-            className="w-full flex justify-between first:pb-4 pb-4 last:pb-0">
-                <div className="w-full max-w-10/12 flex gap-2 items-center">
-                    <div className="h-44 w-44 shrink-0">
-                        <Image 
-                         alt={name}
-                         src={photo}
-                         className="w-full h-full rounded-lg object-cover border border-[#5D5D5D]"
-                         width={1000}
-                         height={1000}
-                        />
-                    </div>
-                    <div className="flex flex-col justify-between">
-                        
-                        <h1 className="font-google font-bold text-3xl leading-7">{name}</h1>
-                    
-                        <h6 className="font-google font-light text-sm text-[#C2C2C2] mt-2">{`${description}`}</h6>
-                        
-                        <h2 className="font-google font-medium text-3xl mt-2 text-[#F97318]">{`${Number(price).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'})}`}</h2>
+        {/* IMAGEM */}
+        <div className="w-24 h-24 shrink-0 sm:w-32 sm:h-32 md:w-44 md:h-44">
+          <Image
+            alt={name}
+            src={photo}
+            className="w-full h-full rounded-lg object-cover border border-[#5D5D5D]"
+            width={1000}
+            height={1000}
+          />
+        </div>
 
-                        {/* Quantity and Button Remove */}
-                        <div className="w-full flex justify-between mt-2">
-                            <div className="flex gap-6 border border-[#505050] items-center py-1 px-2 rounded-md">
-                                <button
-                                onClick={()=> delList()}
-                                className="font-google font-semibold text-2xl hover:cursor-pointer">-</button>
+        {/* CONTEÚDO */}
+        <div className="min-w-0 flex flex-1 flex-col justify-between">
 
-                                <span className="font-google font-bold">{quantity}</span>
+          <div>
+            <h1 className="font-google font-bold text-base leading-tight break-words sm:text-xl md:text-3xl md:leading-7">
+              {name}
+            </h1>
 
-                                <button
-                                onClick={()=> addList()}
-                                className="font-google font-semibold text-2xl hover:cursor-pointer">+</button>
-                            </div>
+            <h6 className="font-google font-light text-xs text-[#C2C2C2] mt-1 sm:text-sm md:mt-2">
+              {description}
+            </h6>
 
-                            <button 
-                            onClick={()=> removeItemCart(id)}
-                            className="flex shrink-0 gap-1.5 items-center cursor-pointer me-16">
-                                <FaRegTrashAlt color="#fff" size={20} />
-                                <span className="font-google whitespace-nowrap">Remover</span>
-                            </button>
-                        </div>
-                        
-                    </div>
-                </div>
-                <div className="w-full max-w-2/12 flex flex-col justify-between items-end">
-                    <span className="font-google font-light bg-[#1D1D1D] border border-[#666666] py-1 px-2 rounded-lg">{category}</span>
-                    <div>
-                        <h1 className="text-end font-google text-md">Subtotal</h1>
-                        <span className="font-google font-medium text-xl">{subtotal.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}</span>
-                    </div>
-                </div>
+            <h2 className="font-google font-medium text-xl mt-2 text-[#F97318] sm:text-2xl md:text-3xl">
+              {Number(price).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </h2>
+          </div>
+
+          {/* QUANTIDADE E REMOVER */}
+          <div className="w-full flex flex-wrap items-center justify-between gap-3 mt-3">
+
+            {/* QUANTIDADE */}
+            <div className="flex gap-4 sm:gap-6 border border-[#505050] items-center py-1 px-2 rounded-md">
+
+              <button
+                onClick={delList}
+                className="font-google font-semibold text-xl sm:text-2xl hover:cursor-pointer"
+              >
+                -
+              </button>
+
+              <span className="font-google font-bold text-sm sm:text-base">
+                {quantity}
+              </span>
+
+              <button
+                onClick={addList}
+                className="font-google font-semibold text-xl sm:text-2xl hover:cursor-pointer"
+              >
+                +
+              </button>
+
             </div>
-        </>
-    )
+
+            {/* REMOVER */}
+            <button
+              onClick={() => removeItemCart(id)}
+              className="flex shrink-0 gap-1.5 items-center cursor-pointer me-0 md:me-16"
+            >
+              <FaRegTrashAlt color="#fff" size={16} />
+
+              <span className="font-google text-xs whitespace-nowrap sm:text-sm">
+                Remover
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* CATEGORIA E SUBTOTAL */}
+      <div className="w-full flex flex-row justify-between items-center gap-3 md:w-full md:max-w-2/12 md:flex-col md:items-end md:justify-between">
+
+        <span className="max-w-[55%] truncate font-google font-light text-xs sm:text-sm bg-[#1D1D1D] border border-[#666666] py-1 px-2 rounded-lg">
+          {category}
+        </span>
+
+        <div className="text-end">
+          <h1 className="font-google text-xs sm:text-sm md:text-md">
+            Subtotal
+          </h1>
+
+          <span className="font-google font-medium text-base sm:text-lg md:text-xl whitespace-nowrap">
+            {subtotal.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            })}
+          </span>
+        </div>
+
+      </div>
+    </div>
+  );
 }
