@@ -20,6 +20,7 @@ import type { Product } from "@/types/Products";
 // Assets
 import Fundo from "../../public/Background Home.png";
 import Flyer from "../../public/Flyer.png";
+import { NotFound } from "@/components/notFoundItem";
 
 export default function Home() {
   const [products, setProducts] = React.useState<Product[]>([]);
@@ -153,8 +154,18 @@ export default function Home() {
             <div className="mx-auto mt-3 w-32 border border-[#F97318] sm:w-48 md:mx-0" />
           </div>
 
+          
           {/* PRODUTOS */}
-          <section className="mt-10 grid grid-cols-2 gap-3 px-3 sm:mt-12 sm:gap-5 md:mt-16 md:grid-cols-4 md:gap-6">
+          <section
+            className={`
+              mt-10 px-3 sm:mt-12 sm:gap-5 md:mt-16 md:gap-6
+              ${
+                products.length === 0
+                  ? "w-full min-h-75 flex justify-center items-center"
+                  : "grid grid-cols-2 gap-3 md:grid-cols-4"
+              }
+            `}
+          >
             {loadingProducts && (
               <p className="col-span-full py-10 text-center font-google text-gray-400">
                 Carregando produtos...
@@ -170,9 +181,7 @@ export default function Home() {
             {!loadingProducts &&
               !productsError &&
               products.length === 0 && (
-                <p className="col-span-full py-10 text-center font-google text-gray-400">
-                  Nenhum produto disponível no momento.
-                </p>
+                <NotFound />
               )}
 
             {!loadingProducts &&
@@ -184,6 +193,7 @@ export default function Home() {
                   <Card key={product.id} product={product} />
                 ))}
           </section>
+
 
           {/* BOTÃO */}
           <div className="mt-8 flex justify-center px-4 

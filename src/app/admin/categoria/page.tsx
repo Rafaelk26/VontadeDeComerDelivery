@@ -1,6 +1,4 @@
-
 "use client";
-
 import React from "react";
 import { toast } from "react-toastify";
 
@@ -25,6 +23,7 @@ import { clearAdminDataCache } from "@/lib/cache/adminCache";
 // Types
 import { Category } from "@/types/Categories";
 import { Product } from "@/types/Products";
+import { NotFound } from "@/components/notFoundItem";
 
 export default function AdminCategoria() {
     // PAGE
@@ -163,10 +162,8 @@ export default function AdminCategoria() {
                             } gap-3 sm:gap-4`}
                         >
                             {categoriesPage.length === 0 ? (
-                                <div className="w-full min-h-65 flex justify-center items-center text-center">
-                                    <span className="font-google text-xl text-zinc-600">
-                                        Nenhuma categoria encontrada.
-                                    </span>
+                                <div className="w-full h-135 flex justify-center items-center">
+                                    <NotFound />
                                 </div>
                             ) : (
                                 <>

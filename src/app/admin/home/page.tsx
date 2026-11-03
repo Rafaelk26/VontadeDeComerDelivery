@@ -1,6 +1,4 @@
-
 "use client";
-
 import React from "react";
 import Image from "next/image";
 import { toast } from "react-toastify";
@@ -16,6 +14,7 @@ import { supabase } from "@/server/supabase/supabase";
 // Components
 import { Wrapper } from "@/components/Wrapper";
 import { HeaderAdmin } from "@/components/Header";
+import { NotFound } from "@/components/notFoundItem";
 import { ProductTable } from "@/components/TableAdmin";
 import { Input, InputSearch } from "@/components/Input";
 import { Button, ButtonCancel } from "@/components/Button";
@@ -338,9 +337,9 @@ export default function AdminHome() {
                                                     />
                                                 ))
                                             ) : (
-                                                <p className="py-8 text-center text-base text-zinc-600 font-google">
-                                                    Nenhum produto encontrado.
-                                                </p>
+                                                <div className="w-full h-full flex justify-center items-center">
+                                                    <NotFound />
+                                                </div>
                                             )}
                                         </div>
                                     </div>
