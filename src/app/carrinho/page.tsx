@@ -1,13 +1,13 @@
 "use client";
-
 import React from "react";
 import Image from "next/image";
-import { IoMdCart, IoIosLock } from "react-icons/io";
+import { toast } from "react-toastify";
+import { FaPix } from "react-icons/fa6";
 import { FaPenNib } from "react-icons/fa";
 import { FiShoppingBag } from "react-icons/fi";
 import { CiCreditCard1 } from "react-icons/ci";
-import { FaPix } from "react-icons/fa6";
 import { FaMoneyBills } from "react-icons/fa6";
+import { IoMdCart, IoIosLock } from "react-icons/io";
 
 // Components
 import { Header } from "@/components/Header";
@@ -25,7 +25,6 @@ import { cartContext } from "@/context/Cart/useCart";
 
 // Assets
 import Fundo from "../../../public/Background Carrinho.png";
-import { toast } from "react-toastify";
 
 export default function Carrinho() {
     const context = React.useContext(cartContext);
@@ -54,7 +53,7 @@ export default function Carrinho() {
     // TOTAL
     const total = subtotal + freteCalc;
 
-    async function sendOrderToWhatsApp() {
+    async function sendOrderToWhatsApp(){
         if (cart.length === 0) {
             toast.error("Adicione produtos ao carrinho antes de finalizar.");
             return;
@@ -78,8 +77,13 @@ export default function Carrinho() {
             const message = formatProductsToWhatsApp(result);
             const companyWhatsApp = "5512981960559";
             const whatsappUrl = `https://wa.me/${companyWhatsApp}?text=${encodeURIComponent(message)}`;
-
             window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+
+            cart.forEach((item) => removeItemCart(item.id));
+
+            setMethodPay("");
+            setDescription("Nenhuma observação.");
+
             toast.success(`Pedido ${result.order.codigo} registrado!`);
         } catch (error) {
             console.error("Erro ao finalizar pedido:", error);
@@ -259,6 +263,7 @@ export default function Carrinho() {
                                         className="cursor-pointer"
                                         type="radio"
                                         name="Option"
+                                        checked={methodPay === "debito"}
                                         onClick={() => setMethodPay("debito")}
                                     />
                                 </label>
@@ -275,6 +280,7 @@ export default function Carrinho() {
                                         className="cursor-pointer group"
                                         type="radio"
                                         name="Option"
+                                        checked={methodPay === "credito"}
                                         onClick={() => setMethodPay("credito")}
                                     />
                                 </label>
@@ -289,6 +295,7 @@ export default function Carrinho() {
                                         className="cursor-pointer"
                                         type="radio"
                                         name="Option"
+                                        checked={methodPay === "pix"}
                                         onClick={() => setMethodPay("pix")}
                                     />
                                 </label>
@@ -305,6 +312,7 @@ export default function Carrinho() {
                                         className="cursor-pointer"
                                         type="radio"
                                         name="Option"
+                                        checked={methodPay === "dinheiro"}
                                         onClick={() => setMethodPay("dinheiro")}
                                     />
                                 </label>

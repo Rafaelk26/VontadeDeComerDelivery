@@ -362,6 +362,7 @@ export default function AdminHome() {
                                     name="Nome do produto"
                                     type="text"
                                     placeholder="Ex: Caldo de mandioca com Carne Seca..."
+                                    value={nameForm}
                                 />
                             </div>
 
@@ -376,6 +377,7 @@ export default function AdminHome() {
                                     placeholder="Ex: Sem carne seca, bem separado, etc..."
                                     className="w-full h-40 bg-[#161616] border border-[#A2A2A2] rounded-xl p-2 font-google hover:border-[#A2A2A2] focus:border-[#A2A2A2]"
                                     name="descricao"
+                                    value={descriptionForm}
                                 />
                             </div>
 
@@ -387,6 +389,7 @@ export default function AdminHome() {
                                         name="Preço"
                                         type="text"
                                         placeholder="R$ 0,00"
+                                        value={priceForm}
                                     />
                                 </div>
 
@@ -399,6 +402,7 @@ export default function AdminHome() {
                                         onChange={(e) => setCategoryForm(e.target.value)}
                                         className="w-full sm:w-max py-3 px-6 border border-[#777777] bg-[#161616] font-google font-regular rounded-xl transition-all placeholder:italic placeholder:opacity-70 hover:border-[#A2A2A2]"
                                         name="categoria"
+                                        value={categoryForm}
                                     >
                                         <option key={"0"} value="">
                                             Selecione a categoria
